@@ -298,9 +298,9 @@ function updateProjectInfo(projectId) {
         }
         
         // 🔥 關鍵：更新project-id span元素
-        const projectIdSpan = document.querySelector('.project-id');
-        if (projectIdSpan) {
-            projectIdSpan.textContent = projectId;
+        const sidebarProjectId = document.getElementById('sidebar-project-id');
+        if (sidebarProjectId && projectId) {
+            sidebarProjectId.textContent = projectId;
         }
     }
 }

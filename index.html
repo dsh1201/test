@@ -3,731 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>總體基因體 Reference-based 分析結果報告 - v1.0.4</title>
+    <title>BIOTOOLS - 總體基因體 Reference-based 分析結果報告</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="src/css/image.css" />
-    <script src="src/js/image-modal.js"></script>  
-    <style>
-        /* CSS Variables for Theme */
-        :root {
-            --primary-color: #2E86C1;
-            --secondary-color: #58D68D;
-            --accent-color: #F39C12;
-            --background-color: #FAFAFA;
-            --card-background: #FFFFFF;
-            --text-primary: #2C3E50;
-            --text-secondary: #5D6D7E;
-            --border-color: #E8F4FD;
-            --hover-color: #EBF5FF;
-            --shadow: 0 2px 12px rgba(46, 134, 193, 0.1);
-            --shadow-hover: 0 4px 20px rgba(46, 134, 193, 0.15);
-            --sidebar-width: 280px;
-            --header-height: 70px;
-        }
+    <link rel="stylesheet" type="text/css" href="src/css/biotools-report.css" />
 
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background: linear-gradient(135deg, var(--primary-color), #3498DB);
-            color: white;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            margin-right: 1rem;
-        }
-
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-left: var(--sidebar-width);
-            transition: margin-left 0.3s ease;
-        }
-
-        .header .project-ver {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            position: fixed;
-            top: var(--header-height);
-            left: 0;
-            width: var(--sidebar-width);
-            height: calc(100vh - var(--header-height));
-            background: var(--card-background);
-            border-right: 1px solid var(--border-color);
-            overflow-y: auto;
-            z-index: 999;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-content {
-            padding: 1.5rem 0;
-        }
-
-        .project-info {
-            margin: 0 1.5rem 2rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, #EBF5FF, #D6EAF8);
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .project-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .project-id-display {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            background: rgba(46, 134, 193, 0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: 1px solid rgba(46, 134, 193, 0.2);
-            font-family: 'Roboto Mono', monospace;
-            letter-spacing: 0.5px;
-            word-break: break-all;
-            transition: all 0.2s ease;
-        }
-
-        .project-id-display:hover {
-            background: rgba(46, 134, 193, 0.15);
-            transform: translateY(-1px);
-        }
-
-        .progress-text {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: #E8F4FD;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-bottom: 0.25rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border-left: 3px solid transparent;
-            font-weight: 500;
-        }
-
-        .nav-link:hover {
-            background: var(--hover-color);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-        }
-
-        .nav-link.active {
-            background: var(--hover-color);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .nav-link i {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .nav-section {
-            margin: 1.5rem 0 0.5rem;
-            padding: 0 1.5rem;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            margin-top: var(--header-height);
-            padding: 2rem;
-            min-height: calc(100vh - var(--header-height));
-            transition: margin-left 0.3s ease;
-        }
-
-        /* Summary Dashboard */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .summary-card {
-            background: var(--card-background);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .summary-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .summary-card h3 {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .summary-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .summary-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Content Sections */
-        .content-section {
-            background: var(--card-background);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .section-header {
-            background: linear-gradient(135deg, #F8FBFF, #EBF5FF);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title i {
-            margin-right: 0.75rem;
-            color: var(--secondary-color);
-        }
-
-        .section-content {
-            padding: 2rem;
-        }
-
-        .collapse-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-
-        .collapse-btn:hover {
-            background: rgba(46, 134, 193, 0.1);
-        }
-
-        /* Analysis Cards */
-        .analysis-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .analysis-card {
-            background: var(--card-background);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .analysis-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #F8FBFF, #EBF5FF);
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .card-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.25rem;
-        }
-
-        .card-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        /* Image Container */
-        .image-container {
-            max-width: 800px;
-            margin: 1.5rem auto;
-            text-align: center;
-            background: var(--card-background);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease;
-        }
-
-        .image-container:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .analysis-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-        }
-
-        .analysis-image:hover {
-            opacity: 0.9;
-        }
-
-        .image-caption {
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, #F8FBFF, #EBF5FF);
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .image-caption strong {
-            color: var(--primary-color);
-        }
-
-        /* Image Modal */
-        .image-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            cursor: pointer;
-        }
-
-        .image-modal img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-        }
-
-        .image-modal .close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Visualization Placeholder */
-        .viz-placeholder {
-            background: linear-gradient(135deg, #F8FBFF, #EBF5FF);
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            padding: 3rem;
-            text-align: center;
-            color: var(--text-secondary);
-            margin: 1rem 0;
-        }
-
-        .viz-placeholder i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            opacity: 0.5;
-        }
-
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: var(--card-background);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .data-table th {
-            background: linear-gradient(135deg, var(--primary-color), #3498DB);
-            color: white;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .data-table td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        .data-table tr:nth-child(even) {
-            background: #F8FBFF;
-        }
-
-        .data-table tr:hover {
-            background: var(--hover-color);
-        }
-
-        /* Badges and Tags */
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .badge-secondary {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .badge-accent {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .badge-info {
-            background: #EBF5FF;
-            color: var(--primary-color);
-        }
-
-        /* Functional Analysis Tabs */
-        .tab-container {
-            margin: 2rem 0;
-        }
-
-        .tab-nav {
-            display: flex;
-            background: var(--background-color);
-            border-radius: 8px;
-            padding: 0.25rem;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            min-width: 120px;
-        }
-
-        .tab-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .tab-btn:hover:not(.active) {
-            background: var(--hover-color);
-            color: var(--primary-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .header h1 {
-                margin-left: 0;
-            }
-
-            .dashboard {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-
-            .analysis-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-            .project-info {
-                margin: 0 1rem 1.5rem;
-                padding: 0.75rem;
-            }
-            
-            .project-id-display {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .header .project-ver {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .section-content {
-                padding: 1rem;
-            }
-
-            .header {
-                padding: 0 1rem;
-            }
-
-            .tab-nav {
-                flex-direction: column;
-            }
-
-            .tab-btn {
-                margin-bottom: 0.25rem;
-            }
-
-            .analysis-image {
-                max-width: 100%;
-            }
-            
-            .image-caption {
-                padding: 0.75rem 1rem;
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mt-1 { margin-top: 0.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(46, 134, 193, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Scroll to Top Button */
-        .scroll-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: all 0.2s ease;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .scroll-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-top:hover {
-            background: #2471A3;
-            transform: translateY(-2px);
-        }
-
-        /* Table wrapper for responsive scrolling */
-        .table-wrapper {
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-
-        /* Info boxes */
-        .info-box {
-            background: #EBF5FF;
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
-            margin: 1rem 0;
-        }
-
-        .warning-box {
-            background: #FFF3CD;
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-            margin: 1rem 0;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+    <header class="header" role="banner" aria-label="BIOTOOLS 總體基因體分析報告標題">
+        <div class="header-logo">
+            <img src="src/images/BIOTOOLS_LOGO_橘底.藍底版.png" alt="BIOTOOLS - Make Research Happen" class="logo-image" title="BIOTOOLS - Make Research Happen"> 
+        </div>
+        <button class="mobile-menu-btn">
             <i class="fas fa-bars"></i>
         </button>
-        <h1>總體基因體 Reference-based 分析結果報告</h1>
-        <span class="project-ver" id="project-ver">v1.0.5</span>
+        <div class="header-title">
+            <h1>總體基因體分析結果報告</h1>
+        </div>
+        <div class="header-nav">
+        <!-- 報告類型標識 -->
+        <span class="analysis-type">
+            <i class="fas fa-dna"></i>
+            <span class="analysis-text">Reference-based analysis</span>
+        </span>
+        
+        <!-- 導航下拉選單 -->
+        <div class="nav-dropdown">
+            <button class="nav-dropdown-btn" onclick="toggleNavDropdown()">
+                <i class="fas fa-bars"></i>
+                <span class="nav-btn-text">相關連結</span>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </button>
+            
+            <div class="nav-dropdown-content" id="navDropdown">
+                <a href="http://www.toolsbiotech.com/" target="_blank" class="nav-dropdown-item">
+                    <i class="fas fa-home"></i>
+                    <span>Website</span>
+                </a>
+                <a href="https://cloud.toolsbiotech.com/" target="_blank" class="nav-dropdown-item">
+                    <i class="fas fa-cloud"></i>
+                    <span>Cloud</span>
+                </a>
+                <a href="https://zh-tw.facebook.com/toolsbiotech/" target="_blank" class="nav-dropdown-item">
+                    <i class="fab fa-facebook-square"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://www.facebook.com/groups/721650161518694/" target="_blank" class="nav-dropdown-item">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>BMRC</span>
+                </a>
+                <a href="https://www.toolsbiotech.com/news_list.php?id=2" target="_blank" class="nav-dropdown-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>News</span>
+                </a>
+                <div class="nav-dropdown-divider"></div>
+                <!-- <div class="nav-dropdown-footer">
+                    <span class="version-info" id="header-version">v1.0.5</span>
+                </div> -->
+            </div>
+        </div>
+    </div>
     </header>
 
     <!-- Sidebar Navigation -->
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar" id="sidebar" role="navigation" aria-label="報告章節導航">
         <div class="sidebar-content">
             <div class="project-info">
                 <div class="project-label">案件編號</div>
                 <div class="project-id-display" id="sidebar-project-id">BI-ANA-XXXX</div>
             </div>
 
+            
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#overview" class="nav-link active">
+                    <a href="#overview" class="nav-link active" aria-current="page">
                         <i class="fas fa-home"></i>
                         執行摘要
                     </a>
@@ -813,11 +164,11 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" role="main" aria-label="分析報告內容">
         <!-- Executive Summary -->
-        <section id="overview" class="content-section">
+        <section id="overview" class="content-section" aria-labelledby="overview-title">
             <div class="section-header">
-                <h2 class="section-title">
+                <h2 class="section-title" id="overview-title">
                     <i class="fas fa-chart-line"></i>
                     執行摘要
                 </h2>
@@ -825,38 +176,33 @@
             <div class="section-content">
                 <div class="dashboard">
                     <div class="summary-card">
+                        <h3>組別總數</h3>
+                        <div class="summary-value" id="group-counts">--</div>
+                        <div class="summary-label">個分析組別</div>
+                    </div>
+                    <div class="summary-card">
                         <h3>樣本總數</h3>
-                        <div class="summary-value">82</div>
+                        <div class="summary-value" id="sample-counts">--</div>
                         <div class="summary-label">個分析樣本</div>
                     </div>
                     <div class="summary-card">
-                        <h3>檢測物種 (Species)</h3>
-                        <div class="summary-value">1079</div>
-                        <div class="summary-label">種微生物</div>
+                        <h3>檢測菌門</h3>
+                        <div class="summary-value" id="phyla-counts">--</div>
+                        <div class="summary-label">種菌門</div>
                     </div>
                     <div class="summary-card">
-                        <h3>平均多樣性</h3>
-                        <div class="summary-value">3.84</div>
-                        <div class="summary-label">Shannon Index</div>
-                    </div>
+                        <h3>檢測菌屬</h3>
+                        <div class="summary-value" id="genus-counts">--</div>
+                        <div class="summary-label">種菌屬</div>
+                    </div>  
+                    <div class="summary-card">
+                        <h3>檢測物種</h3>
+                        <div class="summary-value" id="species-counts">--</div>
+                        <div class="summary-label">種菌種</div>
+                    </div> 
                 </div>
 
                 <div class="analysis-grid">
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h3 class="card-title">主要發現</h3>
-                            <p class="card-subtitle">Key Findings</p>
-                        </div>
-                        <div class="card-content">
-                            <ul style="line-height: 1.8;">
-                                <li><span class="badge badge-primary">Bacteroidetes</span> 為主要優勢菌門 (45.2%)</li>
-                                <li><span class="badge badge-secondary">Firmicutes</span> 次要優勢菌門 (32.1%)</li>
-                                <li>樣本間 <span class="badge badge-accent">Beta diversity</span> 顯著差異 (p < 0.01)</li>
-                                <li>功能基因主要集中於 <span class="badge badge-info">代謝途徑</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
                     <div class="analysis-card">
                         <div class="card-header">
                             <h3 class="card-title">分析範圍</h3>
@@ -865,16 +211,43 @@
                         <div class="card-content">
                             <ul style="line-height: 1.8;">
                                 <li>✓ 定序資料品質管控</li>
-                                <li>✓ 菌群分類分析 (Taxonomic profiling)</li>
-                                <li>✓ Alpha & Beta 生物多樣性</li>
-                                <li>✓ 統計差異分析</li>
+                                <li>✓ 菌群分類分析</li>
                                 <li>✓ 功能性註釋 (7個資料庫)</li>
                             </ul>
                         </div>
                     </div>
+
+                    <!-- 🔥 修改：樣本規模評估卡片 -->
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-bar"></i>
+                                樣本規模評估
+                            </h3>
+                            <p class="card-subtitle">Sample Size Assessment</p>
+                        </div>
+                        <div class="card-content">
+                            <!-- 樣本大小警告容器 -->
+                            <div id="sample-size-warning" class="sample-size-container">
+                                <div class="loading-state">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>分析樣本規模中...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔥 新增：統計分析方法建議 -->
+                <div class="analysis-methods-recommendation" id="analysis-methods-info">
+                    <h5><i class="fas fa-lightbulb"></i> 可用統計分析方法</h5>
+                    <div class="methods-grid" id="recommended-methods">
+                        <!-- JavaScript動態填入 -->
+                    </div>
                 </div>
             </div>
         </section>
+
 
         <!-- Background -->
         <section id="background" class="content-section">
@@ -886,6 +259,10 @@
             </div>
             <div class="section-content">
                 <p class="mb-2">總體基因體學（Metagenomics）指直接從環境樣本中提取全部的基因體進行定序與分析，以了解樣本中微生物的組成及功能。它使用霰彈槍式定序法（shotgun sequencing）對於樣本中所有DNA進行定序，直接分析樣本中全部微生物的基因體，包括目前未能培養或新發現的微生物菌種，彌補了僅能建立在可培養微生物之傳統研究法的限制。</p>
+                <div class="info-box mb-3">
+                    <i class="fas fa-dna"></i>
+                    <strong>Reference-based 分析優勢：</strong> 相較於 Assembly-based 方法，本報告採用的 Reference-based 分析具有計算效率高、結果穩定、適合大規模樣本比較等優點，特別適合已知微生物群落的功能與分類研究。
+                </div>
                 
                 <h3 class="mb-1 mt-3" style="color: var(--primary-color);">**應用範圍**</h3>
                 <ul style="margin-left: 1.5rem; line-height: 1.8;">
@@ -924,9 +301,11 @@
                     </table>
                 </div>
 
-                <div class="info-box">
-                    <strong>本報告採用：</strong> Reference-based analysis 方法進行樣本中微生物的組成研究，使用 MetaPhlAn 和 HUMAnN 進行物種分類和功能分析。
-                </div>
+                <p class="info-box">
+                    本報告採用 
+                    <strong>Reference-based analysis</strong> 
+                    方法進行樣本中微生物的組成研究，使用 MetaPhlAn 和 HUMAnN 進行物種分類和功能分析。
+                </p>
             </div>
         </section>
 
@@ -939,16 +318,16 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">生物資訊分析流程是以 Reference-based analysis 方式處理 Shotgun 定序數據。此分析流程包括使用 KneadData 去除低品質的序列，並在對宿主基因組進行比對後排除宿主相關序列。透過 MetaPhlAn 比對至資料庫（ChocoPhlAn）後，進行人類或小鼠微生物的物種分類分析，可量化在樣本中代表性物種和菌株的分佈。此外，利用 HUMAnN 進行功能分析，透過 UniRef 和 MetaCyc 等資料庫分別進行功能分析和代謝路徑分析</p>
+                <p class="mb-2">生物資訊分析流程是以 Reference-based analysis 方式處理 Shotgun 定序數據。此分析流程包括使用 KneadData 去除低品質的序列，並在對宿主基因體進行比對後排除宿主相關序列。透過 MetaPhlAn 比對至資料庫（ChocoPhlAn）後，進行人類或小鼠微生物的物種分類分析，可量化在樣本中代表性物種和菌株的分佈。此外，利用 HUMAnN 進行功能分析，透過 UniRef 和 MetaCyc 等資料庫分別進行功能分析和代謝路徑分析</p>
                 
                 <div class="image-container">
-                    <img src="src/images/analysis_pipeline.png" 
+                    <img src="src/images/workflow.png" 
                         alt="總體基因體生物資訊分析流程" 
                         class="analysis-image"
                         onclick="openImageModal(this.src)"
                         onerror="this.style.border='2px dashed red'; this.alt='圖片載入失敗: ' + this.src;">
                     <div class="image-caption">
-                        <strong>圖 1.</strong> 總體基因體生物資訊分析流程
+                        <strong>總體基因體生物資訊分析流程</strong>
                     </div>
                 </div>
 
@@ -1008,7 +387,7 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">定序後得到的原始序列中可能會存在部分於樣品製備中所留下的轉接子（adapter）序列，或是定序品質較差的序列，這些情況可能會對後續的分析造成不利影響。為了得到較佳的分析結果，需要在進行實際分析之前，對原始的定序序列進行品質過濾和檢查的步驟。數據根據成對序列 (Read 1 與 Read 2) 進行整理。</p>
+                <p class="mb-2">定序後得到的原始序列中可能會存在部分於樣品製備中所留下的轉接子（adapter）序列，或是定序品質較差的序列，這些情況可能會對後續的分析造成不利影響。為了得到較佳的分析結果，需要在進行實際分析之前，對原始的定序序列進行品質過濾和檢查的步驟。數據根據成對序列 (Read 1 與 Read 2) 進行整理。Raw：原始序列之數量。Trimmed：原始序列進行品質管控後之序列數量。Decontaminated：移除宿主序列後之序列數量。</p>
                 
                 <div class="analysis-grid">
                     <div class="analysis-card">
@@ -1018,16 +397,18 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/dna_read_count_read1.png" 
+                                <img src="../01.Sequencing_Data/03.Quality_Control/dna_read_count_read1.png" 
                                      alt="序列數量柱狀圖" 
                                      class="analysis-image"
                                      loading="lazy"
                                      style="max-width: 800px; max-height: 500px; object-fit: contain;"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-caption">
-                                    <strong>圖 2.</strong> Read 1 序列數量柱狀圖
-                                    <br><small>Raw：原始序列之數量。Trimmed：原始序列進行品質管控後之序列數量。Decontaminated：移除宿主序列後之序列數量。</small>
-                                    <br><small class="file-path">檔案路徑：01.Sequencing_Data/03.Quality_Control/dna_read_count_read1.png</small>
+                                     <strong>Read 1 序列數量柱狀圖</strong>
+                                    <small class="file-path">
+                                        <i class="fas fa-folder-open"></i>
+                                        路徑：01.Sequencing_Data/03.Quality_Control/dna_read_count_read1.png
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -1040,42 +421,67 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/dna_read_count_read2.png" 
+                                <img src="../01.Sequencing_Data/03.Quality_Control/dna_read_count_read2.png" 
                                      alt="序列數量柱狀圖" 
                                      class="analysis-image"
                                      loading="lazy"
                                      style="max-width: 800px; max-height: 500px; object-fit: contain;"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-caption">
-                                    <strong>圖 2.</strong> Read 2 序列數量柱狀圖
-                                    <br><small>Raw：原始序列之數量。Trimmed：原始序列進行品質管控後之序列數量。Decontaminated：移除宿主序列後之序列數量。</small>
-                                    <br><small class="file-path">檔案路徑：01.Sequencing_Data/03.Quality_Control/dna_read_count_read2.png</small>
+                                     <strong>Read 2 序列數量柱狀圖</strong>
+                                    <small class="file-path">
+                                        <i class="fas fa-folder-open"></i>
+                                        路徑：01.Sequencing_Data/03.Quality_Control/dna_read_count_read2.png
+                                    </small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 class="mb-1 mt-3" style="color: var(--primary-color);">**品質管控結果表**</h3>
-                <div class="table-wrapper">
-                    <table id="qc-table" class="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Sample</th>
-                                <th>Raw Reads</th>
-                                <th>Trimmed Reads</th>
-                                <th>Decontaminated Reads</th>
-                                <th>Decontaminated / Raw (%)</th>
-                                <th>Decontaminated / Trimmed (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- insert data by JavaScript  -->
-                        </tbody>
-                    </table>
-                    <!-- insert pages by JavaScript -->
-                    <br><small class="file-path">檔案路徑：01.Sequencing_Data/03.Quality_Control/read_count_table.xlsx</small>
+                <div class="qc-table-section">
+                    <div class="row" style="padding-bottom: 15px;">
+                        <div class="col content-subtitle">
+                            <h3>資料品質控制統計表</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- 滾動表格容器 -->
+                        <div class="table-responsive">
+                            <table id="qc-table" class="table table-hover table-bordered table-striped">
+                                <thead class="table-header-fixed">
+                                    <tr class="text-center">
+                                        <th style="vertical-align: middle; min-width: 30px;">#</th>
+                                        <th style="vertical-align: middle; min-width: 150px;">Sample</th>
+                                        <th style="vertical-align: middle; min-width: 120px;">Raw Reads</th>
+                                        <th style="vertical-align: middle; min-width: 120px;">Trimmed Reads</th>
+                                        <th style="vertical-align: middle; min-width: 140px;">Decontaminated Reads</th>
+                                        <th style="vertical-align: middle; min-width: 130px;">Decontaminated / Raw (%)</th>
+                                        <th style="vertical-align: middle; min-width: 140px;">Decontaminated / Trimmed (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qc-table-body">
+                                    <!-- 數據將由JavaScript插入 -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- 表格說明 -->
+                        <div class="fig-legend">
+                            <strong>說明：</strong>
+                            Sample 表示樣本名稱；
+                            Raw Reads 表示原始序列數量；
+                            Trimmed Reads 表示修剪後序列數量；
+                            Decontaminated Reads 表示去除宿主序列後的數量；
+                            Decontaminated / Raw (%) 表示去除宿主序列相對於原始序列的百分比；
+                            Decontaminated / Trimmed (%) 表示去除宿主序列相對於修剪後序列的百分比。
+                        </div>
+                        <small class="file-path">
+                            <i class="fas fa-folder-open"></i>
+                            路徑：01.Sequencing_Data/03.Quality_Control/read_count_table.xlsx
+                        </small>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1089,7 +495,7 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">經過嚴謹的品質控制流程後，所得到的高品質序列會被提交給 MetaPhlAn 進行分析。MetaPhlAn 使用一個經過專門優化的資料庫（ChocoPhlAn），從約100萬微生物基因體中識別出約510萬個SGB（Species-level Genome Bins）標記基因（marker genes）。</p>
+                <p class="mb-2">經過嚴謹的品質控制流程後，所得到的高品質序列會被提交給 MetaPhlAn 進行分析。MetaPhlAn 使用一個經過最佳化的資料庫（ChocoPhlAn），從約100萬微生物基因體中辨識出約510萬個SGB（Species-level Genome Bins）標記基因（marker genes）。</p>
 
                 <div class="analysis-card">
                     <div class="card-header">
@@ -1098,8 +504,12 @@
                     </div>
                     <div class="card-content">
                         <div class="image-container krona-container">
+                            <div class="loading-overlay" id="krona-loading">
+                                <div class="loading-spinner"></div>
+                                <p>正在載入互動式圖表...</p>
+                            </div>
                             <!-- Krona iframe -->
-                            <iframe src="src/images/krona.html" 
+                            <iframe src="../05.Visualization/02.Taxa_Abundance/krona.html" 
                                     class="krona-iframe"
                                     id="kronaIframe"
                                     title="物種豐度階層Krona圓餅圖"
@@ -1110,82 +520,20 @@
                             </iframe>
                             
                             <div class="image-caption">
-                                <strong>圖 3.</strong> 物種豐度階層Krona圓餅圖
+                                 <strong>物種豐度階層 Krona 圓餅圖</strong>
                                 <br><small>互動式網頁呈現，點擊查看不同分類層級</small>
-                                <br><small class="file-path">檔案路徑：05.Visualization/02.Taxa_Aboundance/krona(*).png</small>
+                                <small class="file-path">
+                                    <i class="fas fa-folder-open"></i>
+                                    路徑：05.Visualization/02.Taxa_Abundance/krona(*).png
+                                </small>
                             </div>
                         </div>
-                    </div>
-
+                    </div>                    
                 </div>
 
-                <h3 class="mb-1 mt-3" style="color: var(--primary-color);">**主要分類結果**</h3>
-                <div class="analysis-grid">
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Top 5 門 (Phylum) 平均相對豐度</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="table-wrapper">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr><th>門</th><th>平均相對豐度 (%)</th><th>標準差</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>Bacteroidetes</td><td>45.2</td><td>±8.3</td></tr>
-                                        <tr><td>Firmicutes</td><td>32.1</td><td>±6.7</td></tr>
-                                        <tr><td>Proteobacteria</td><td>12.4</td><td>±4.2</td></tr>
-                                        <tr><td>Actinobacteria</td><td>8.9</td><td>±3.1</td></tr>
-                                        <tr><td>Others</td><td>1.4</td><td>±0.8</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Top 5 屬 (Genus) 平均相對豐度</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="table-wrapper">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr><th>屬</th><th>平均相對豐度 (%)</th><th>標準差</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>Bacteroides</td><td>23.5</td><td>±5.2</td></tr>
-                                        <tr><td>Faecalibacterium</td><td>12.8</td><td>±3.4</td></tr>
-                                        <tr><td>Prevotella</td><td>9.7</td><td>±4.1</td></tr>
-                                        <tr><td>Bifidobacterium</td><td>7.2</td><td>±2.8</td></tr>
-                                        <tr><td>Escherichia</td><td>4.6</td><td>±2.1</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Top 5 物種 (Species) 平均相對豐度</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="table-wrapper">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr><th>物種</th><th>平均相對豐度 (%)</th><th>標準差</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>Bacteroides fragilis</td><td>15.3</td><td>±3.5</td></tr>
-                                        <tr><td>Faecalibacterium prausnitzii</td><td>10.1</td><td>±2.9</td></tr>
-                                        <tr><td>Prevotella copri</td><td>8.4</td><td>±2.6</td></tr>
-                                        <tr><td>Bifidobacterium adolescentis</td><td>5.7</td><td>±1.8</td></tr>
-                                        <tr><td>Escherichia coli</td><td>3.9</td><td>±1.2</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                <!-- 在現有的整體多樣性統計之後添加 -->
+                <div class="overall-stats">
+                    <!-- 現有的整體多樣性統計內容 -->
                 </div>
             </div>
         </section>
@@ -1199,25 +547,19 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">Alpha diversity是一種衡量單一樣本生態系統內生物多樣性的方法。Alpha diversity 使用物種（Species-level）資料計算。使用指標有 Chao1、Shannon、Simpson、Pielou 等。數值愈低表示樣本內的生物多樣性愈低，反之亦然。</p>
+                <p class="mb-2">Alpha diversity 是一種衡量單一樣本生態系統內生物多樣性的方法。Alpha diversity 使用物種（Species-level）資料計算。使用指標有 Chao1、Shannon、Simpson、Pielou 等。數值愈低表示樣本內的生物多樣性愈低，反之亦然。</p>
 
                 <div class="analysis-grid">
                     <div class="analysis-card">
                         <div class="card-header">
-                            <h3 class="card-title">多樣性指標箱形圖</h3>
+                            <h3 class="card-title">Alpha 多樣性指標箱形圖</h3>
                             <p class="card-subtitle">Alpha Diversity Boxplot</p>
                         </div>
                         <div class="card-content">
-                            <div class="image-container">
-                                <img src="src/images/alpha_diversity_boxplot.png" 
-                                     alt="Alpha diversity 箱形圖" 
-                                     class="analysis-image"
-                                     onclick="openImageModal(this.src)">
-                                <div class="image-caption">
-                                    <strong>圖 4.</strong> Alpha diversity 箱形圖
-                                    <br><small>Chao1, Shannon, Simpson, Pielou 指標比較</small>
-                                    <br><small class="file-path">檔案路徑：04.Statistics/Alpha_Diversity/alpha_diversity_boxplot.png</small>
-                                </div>
+                            <div class="viz-placeholder">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Alpha Diversity Boxplot</p>
+                                <small>Chao1, Shannon, Simpson, Pielou 多樣性指標分佈情況</small>
                             </div>
                         </div>
                     </div>
@@ -1234,7 +576,7 @@
                                         <tr><th>指標</th><th>含義</th><th>數值範圍</th></tr>
                                     </thead>
                                     <tbody>
-                                        <tr><td><strong>Chao1</strong></td><td>物種豐富度估計</td><td>≥ 檢測到的物種數</td></tr>
+                                        <tr><td><strong>Chao1</strong></td><td>物種豐富度估計</td><td>檢測到的物種數</td></tr>
                                         <tr><td><strong>Shannon</strong></td><td>多樣性與均勻度</td><td>0 ~ ln(S)</td></tr>
                                         <tr><td><strong>Simpson</strong></td><td>優勢度指標</td><td>0 ~ 1</td></tr>
                                         <tr><td><strong>Pielou</strong></td><td>均勻度指標</td><td>0 ~ 1</td></tr>
@@ -1242,30 +584,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <h3 class="mb-1 mt-3" style="color: var(--primary-color);">**統計結果摘要**</h3>
-                <div class="dashboard">
-                    <div class="summary-card">
-                        <h3>平均 Shannon 指數</h3>
-                        <div class="summary-value">3.84</div>
-                        <div class="summary-label">±0.67 (標準差)</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>平均 Simpson 指數</h3>
-                        <div class="summary-value">0.92</div>
-                        <div class="summary-label">±0.08 (標準差)</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>平均物種豐富度</h3>
-                        <div class="summary-value">127</div>
-                        <div class="summary-label">±23 (Chao1)</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>平均均勻度</h3>
-                        <div class="summary-value">0.78</div>
-                        <div class="summary-label">±0.12 (Pielou)</div>
                     </div>
                 </div>
             </div>
@@ -1280,7 +598,7 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">Beta diversity 用於暸解不同群組/樣本間的微生物組成差異，而多變量統計分析（multivariate statistical analysis）使用物種豐度資料（多變量資料）用以衡量不同群組/樣本間的微生物組成結構的方法。樣品組別以不同顏色區分，橢圓範圍為該組別95% 信賴區間的範圍。當觀察的樣本組別在二維圖上的距離越近，表示相似程度越高，反之則表示樣品組別相似程度越低。</p>
+                <p class="mb-2">Beta diversity 用於暸解不同群組/樣本間的微生物組成差異，而多變量統計分析（multivariate statistical analysis）使用物種豐度資料（多變量資料）用以衡量不同群組/樣本間的微生物組成結構的方法。樣品組別以不同顏色區分，橢圓範圍為該組別 95% 信賴區間的範圍。當觀察的樣本組別在二維圖上的距離越近，表示相似程度越高，反之則表示樣品組別相似程度越低。</p>
 
                 <div class="analysis-grid">
                     <div class="analysis-card">
@@ -1290,14 +608,16 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/pca_ellipse.png" 
-                                     alt="主成份分析圖" 
-                                     class="analysis-image"
-                                     onclick="openImageModal(this.src)">
-                                <div class="image-caption">
-                                    <strong>圖 5.</strong> 主成份分析圖
-                                    <br><small>PCA 多變量分析結果</small>
-                                    <br><small class="file-path">檔案路徑：05.Visualization/01.Ordination/pca_(*).png</small>
+                                <div class="viz-placeholder" role="img" aria-label="主成份分析圖表載入中">
+                                    <div class="loading-state">
+                                        <i class="fas fa-chart-area" aria-hidden="true"></i>
+                                        <p>主成份分析圖</p>
+                                        <small>PCA 多變量分析結果 - 點擊載入圖表</small>
+                                        <div class="placeholder-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span>此圖表顯示樣本在主成份空間中的分佈情況</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1310,15 +630,11 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/pcoa_ellipse.png" 
-                                     alt="主座標分析圖" 
-                                     class="analysis-image"
-                                     onclick="openImageModal(this.src)">
-                                <div class="image-caption">
-                                    <strong>圖 5.</strong> 主座標分析圖
-                                    <br><small>PCoA 多變量分析結果</small>
-                                    <br><small class="file-path">檔案路徑：05.Visualization/01.Ordination/pcoa_(*).png</small>
-                                </div>
+                                <div class="viz-placeholder">
+                                    <i class="fas fa-braille"></i>
+                                    <p>主座標分析圖</p>
+                                    <small>PCoA 多變量分析結果</small>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -1330,14 +646,10 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/nmds_ellipse.png" 
-                                    alt="無母數多維尺度分析圖" 
-                                    class="analysis-image"
-                                    onclick="openImageModal(this.src)">
-                                <div class="image-caption">
-                                    <strong>圖 5.</strong> 無母數多維尺度分析圖
-                                    <br><small>nMDS 多變量分析結果</small>
-                                    <br><small class="file-path">檔案路徑：05.Visualization/01.Ordination/nmds_(*).png</small>
+                                <div class="viz-placeholder">
+                                    <i class="fas fa-braille"></i>
+                                    <p>無母數多維尺度分析圖</p>
+                                    <small>nMDS 多變量分析結果</small>
                                 </div>
                             </div>
                         </div>
@@ -1374,13 +686,13 @@
                                 <td><strong>nMDS</strong></td>
                                 <td>保留相對距離</td>
                                 <td>處理非線性關係</td>
-                                <td>復雜結構數據</td>
+                                <td>複雜結構數據</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="info-box">
+                <div class="fig-legend">
                     <strong>nMDS 品質評估：</strong> nMDS使用Stress值來評估低維度空間配置與原始高維度數據間的一致性，其 Stress 值越小表示更可以反映與原始數據的一致性，反應較高的數據精確度。Stress 值小於 0.2 表示分析結果具有一定解釋意義，小於 0.1 可認為是一個好的配置結果，小於 0.05 表示分析結果具極佳的代表性。
                 </div>
             </div>
@@ -1395,23 +707,26 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">樣本中最豐富的20種物種 (TOP20) 以長條圖、箱型圖和熱圖呈現，其餘物種加總合併為 Others。各分類階層（從 Kingdom 到 Species）皆以不同圖表呈現。</p>
+                <p class="mb-2">樣本中最豐富的 20 種物種 (TOP20) 以長條圖、箱型圖和熱圖呈現，其餘物種加總合併為 Others。各分類階層（從 Kingdom 到 Species）皆以不同圖表呈現。</p>
                 
                 <div class="analysis-grid">
                     <div class="analysis-card">
                         <div class="card-header">
                             <h3 class="card-title">相對豐度長條圖</h3>
-                            <p class="card-subtitle">Stacked Barplot</p>
+                            <p class="card-subtitle">Abundance Stacked Barplot</p>
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/group_relative_abundance_species.wo_unclassified.png" 
+                                <img src="../05.Visualization/02.Taxa_Abundance/group_relative_abundance_species.wo_unclassified.png" 
                                      alt="相對豐度長條圖" 
                                      class="analysis-image"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-caption">
-                                    <strong>圖 7.</strong> Species 相對豐度長條圖
-                                    <br><small class="file-path">檔案路徑：05.Visualization/02.Taxa_Aboundance/relative_abundance_barplot_(*).png</small>
+                                    <strong>Species 相對豐度長條圖</strong> 
+                                    <br><small class="file-path">
+                                        <i class="fas fa-folder-open"></i>
+                                        路徑：05.Visualization/02.Taxa_Abundance/relative_abundance_barplot_(*).png
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -1424,13 +739,16 @@
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/relative_abundance_boxplot_species.wo_unclassified.png" 
+                                <img src="../05.Visualization/02.Taxa_Abundance/relative_abundance_boxplot_species.wo_unclassified.png" 
                                      alt="相對豐度箱形圖" 
                                      class="analysis-image"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-caption">
-                                    <strong>圖 8.</strong> Species 相對豐度箱形圖
-                                    <br><small class="file-path">檔案路徑：05.Visualization/02.Taxa_Aboundance/relative_abundance_boxplot_(*).png</small>
+                                    <strong>Species 相對豐度箱形圖</strong>
+                                    <br><small class="file-path">
+                                        <i class="fas fa-folder-open"></i>
+                                        路徑：05.Visualization/02.Taxa_Abundance/relative_abundance_boxplot_(*).png
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -1439,19 +757,48 @@
                     <div class="analysis-card">
                         <div class="card-header">
                             <h3 class="card-title">物種豐度熱圖</h3>
-                            <p class="card-subtitle">Species Heatmap</p>
+                            <p class="card-subtitle">Species Abundance Heatmap</p>
                         </div>
                         <div class="card-content">
                             <div class="image-container">
-                                <img src="src/images/pheatmap_species.wo_unclassified.png" 
+                                <img src="../05.Visualization/04.Heatmap/pheatmap_species.wo_unclassified.png" 
                                      alt="物種豐度熱圖" 
                                      class="analysis-image"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-caption">
-                                    <strong>圖 9.</strong> 物種豐度熱圖
-                                    <br><small class="file-path">檔案路徑：05.Visualization/04.Heatmap/pheatmap_(*).png</small>
+                                    <strong>物種豐度熱圖</strong>
+                                    <br><small class="file-path">
+                                        <i class="fas fa-folder-open"></i>
+                                        路徑：05.Visualization/04.Heatmap/pheatmap_(*).png
+                                    </small>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔥 修改：組別微生物多樣性統計 - Tab版本 -->
+                <div id="group-diversity-section" class="content-section">
+                    <h3 class="mb-1 mt-3" style="color: var(--primary-color);">**組別微生物多樣性統計**</h3>
+                    <p class="section-description">
+                        以下表格顯示各組別中優勢微生物分類單元的平均相對豐度分佈情況，
+                        有助於了解不同組別間的微生物組成特徵與差異。
+                    </p>
+                    
+                    <!-- Tab容器 -->
+                    <div class="tab-container">
+                        <!-- Tab導航 -->
+                        <div class="tab-nav" id="group-tabs-nav">
+                            <!-- JavaScript動態生成 -->
+                            <div class="loading-placeholder">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>載入組別分析中...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Tab內容容器 -->
+                        <div id="group-tabs-content">
+                            <!-- JavaScript動態生成各組別內容 -->
                         </div>
                     </div>
                 </div>
@@ -1467,145 +814,254 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">微生物物種豐度資料通常具有高度的變異性、非常態分佈，並可能包含大量的零值或低豐度值。因此，這類數據適用於非參數統計方法，以便更好地處理稀疏數據和大量零值，進而去檢驗其顯著性水準。p.adjusted 為經過 Benjamini-Hochberg 方法校正後的 p 值</p>
+                <p class="mb-2">微生物物種豐度資料通常具有高度的變異性、非常態分佈，並可能包含大量的零值或低豐度值。因此，這類數據適用於非參數統計方法，以便更好地處理稀疏數據和大量零值，進而去檢驗其顯著性水準。</p>
+                <div class="info-box mb-3">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>統計檢驗說明：</strong> p.adjusted 為經過 Benjamini-Hochberg (FDR) 方法校正後的 p 值，用於控制多重檢驗的偽發現率。顯著性標準：*** p < 0.001, ** p < 0.01, * p < 0.05, ns = 不顯著。
+                </div>
 
                 <div class="tab-container">
                     <div class="tab-nav">
                         <button class="tab-btn active" onclick="switchTab('community-analysis')">群落結構分析</button>
-                        <button class="tab-btn" onclick="switchTab('species-analysis')">物種差異分析</button>
-                        <button class="tab-btn" onclick="switchTab('advanced-analysis')">進階統計分析</button>
+                        <button class="tab-btn" onclick="switchTab('wilcoxon-analysis')" role="tab" aria-selected="false" aria-controls="wilcoxon-analysis">
+                            <i class="fas fa-balance-scale"></i> Wilcoxon 檢驗
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('kruskal-wallis-analysis')">Kruskal-Wallis</button>
+                        <button class="tab-btn" onclick="switchTab('dunn-analysis')">Dunn’s Kruskal-Wallis</button>
+                        <button class="tab-btn" onclick="switchTab('lefse-analysis')">LEfSe</button>
+                        <button class="tab-btn" onclick="switchTab('metastats-analysis')">MetaStats</button>
+                        <button class="tab-btn" onclick="switchTab('metagenomeseq-analysis')">MetagenomeSeq</button>
+                        <button class="tab-btn" onclick="switchTab('ancombc2-analysis')">ANCOM-BC2</button>
                     </div>
 
                     <div id="community-analysis" class="tab-content active">
                         <div class="analysis-grid">
                             <div class="analysis-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">PERMANOVA 分析</h3>
-                                    <p class="card-subtitle">群落結構差異</p>
+                                    <h3 class="card-title">PERMANOVA</h3>
+                                    <p class="card-subtitle">群落結構差異 - Permutational Multivariate Analysis of Variance</p>
                                 </div>
                                 <div class="card-content">
+                                    <p class="mb-2">使用Bray-Curtis相似性矩陣和置換檢驗來評估不同組別間微生物群落的整體組成差異。</p>
                                     <div class="table-wrapper">
-                                        <table class="data-table">
+                                        <table class="data-table" id="permanova-table">
                                             <thead>
-                                                <tr><th>比較</th><th>F-value</th><th>R²</th><th>p.adjusted</th><th>顯著性</th></tr>
+                                                <tr>
+                                                    <th style="min-width: 150px;">比較組別</th>
+                                                    <th style="min-width: 100px;">F-value</th>
+                                                    <th style="min-width: 80px;">R²</th>
+                                                    <th style="min-width: 120px;">p.adjusted</th>
+                                                    <th style="min-width: 100px;">顯著性</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td>Group A vs B</td><td>3.247</td><td>0.156</td><td>0.001</td><td><span class="badge badge-accent">***</span></td></tr>
-                                                <tr><td>Group A vs C</td><td>2.891</td><td>0.134</td><td>0.005</td><td><span class="badge badge-accent">**</span></td></tr>
-                                                <tr><td>Group B vs C</td><td>1.623</td><td>0.087</td><td>0.089</td><td><span class="badge badge-info">ns</span></td></tr>
+                                                <!-- 數據將由 JavaScript 動態插入 -->
+                                                 <tr>
+                                                    <td colspan="5" class="table-loading">
+                                                        <i class="fas fa-spinner fa-spin"></i>
+                                                        載入PERMANOVA數據中...
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
-                                        <small>說明：PERMANOVA使用Bray-Curtis相似性矩陣去計算距離矩陣。F 檢驗值表示組間變異與組內變異的比值，較大的F值表示組間差異較大；R² 值衡量組間差異相對於總體差異的比值，表示對組間差異的解釋度；p.adjusted 為以 Benjamini-Hochberg 方法進行多重檢驗</small>
-                                        <small class="file-path">檔案路徑：04.Statistics/Alpha_Diversity/permanova.txt</small>
+                                        <div class="fig-legend">
+                                            <strong>說明：</strong>PERMANOVA 使用 Bray-Curtis 相似性矩陣去計算距離矩陣。F 檢驗值表示組間變異與組內變異的比值，較大的 F 值表示組間差異較大；R² 值衡量組間差異相對於總體差異的比值，表示對組間差異的解釋度；p.adjusted 為以 Benjamini-Hochberg 方法進行多重檢驗。
+                                        </div>
+                                        <small class="file-path"><i class="fas fa-folder-open"></i>路徑：04.Statistics/Alpha_Diversity/permanova.txt</small>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="analysis-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">ANOSIM 分析</h3>
-                                    <p class="card-subtitle">相似性分析</p>
+                                    <h3 class="card-title">ANOSIM</h3>
+                                    <p class="card-subtitle">相似性分析 - Analysis of Similarities</p>
                                 </div>
                                 <div class="card-content">
+                                    <p class="mb-2">採用Bray-Curtis相似性矩陣，透過對資料進行等級排序來衡量不同組別間的相似性差異。</p>
                                     <div class="table-wrapper">
-                                        <table class="data-table">
+                                        <table class="data-table" id="anosim-table">
                                             <thead>
-                                                <tr><th>比較</th><th>R-value</th><th>p.adjusted</th><th>顯著性</th></tr>
+                                                <tr>
+                                                    <th style="min-width: 150px;">比較組別</th>
+                                                    <th style="min-width: 100px;">R-value</th>
+                                                    <th style="min-width: 120px;">p.adjusted</th>
+                                                    <th style="min-width: 100px;">顯著性</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td>Group A vs B</td><td>0.482</td><td>0.001</td><td><span class="badge badge-accent">***</span></td></tr>
-                                                <tr><td>Group A vs C</td><td>0.367</td><td>0.003</td><td><span class="badge badge-accent">**</span></td></tr>
-                                                <tr><td>Group B vs C</td><td>0.156</td><td>0.067</td><td><span class="badge badge-info">ns</span></td></tr>
+                                                <!-- 數據將由 JavaScript 動態插入 -->
+                                                <tr>
+                                                    <td colspan="4" class="table-loading">
+                                                        <i class="fas fa-spinner fa-spin"></i>
+                                                        載入ANOSIM數據中...
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
-                                        <small>說明：ANOSIM使用Bray-Curtis相似性矩陣去計算距離矩陣。R 值表示組間組內的差異程度，範圍在 -1 到 +1 之間，接近 +1 表示組間差異較大，0 表示組間組內並沒有差異，而接近 -1 表示組內差異較大；p.adjusted 為以 Benjamini-Hochberg 方法進行多重檢驗</small>
-                                        <small class="file-path">檔案路徑：04.Statistics/Alpha_Diversity/anosim.txt</small>
+                                        <div class="fig-legend">
+                                            <strong>說明：</strong>ANOSIM 使用 Bray-Curtis 相似性矩陣去計算距離矩陣。R 值表示組間組內的差異程度，範圍在 -1 到 +1 之間，接近 +1 表示組間差異較大，0 表示組間組內並沒有差異，而接近 -1 表示組內差異較大；p.adjusted 為以 Benjamini-Hochberg 方法進行多重檢驗。
+                                        </div>
+                                        <small class="file-path"><i class="fas fa-folder-open"></i>路徑：04.Statistics/Alpha_Diversity/anosim.txt</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="species-analysis" class="tab-content">
+                    <div id="wilcoxon-analysis" class="tab-content">
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Wilcoxon Rank Sum Test</h3>
+                                <p class="card-subtitle">兩組間差異分析</p>
+                            </div>
+                            <div class="card-content">
+                                <p class="mb-2">非參數統計方法，用於比較兩個獨立樣本組的數據排名分佈是否存在顯著差異。</p>
+                                <div class="image-container">
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <p>Wilcoxon Rank Sum Test 結果</p>
+                                        <small>顯著差異物種</small>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="kruskal-wallis-analysis" class="tab-content">
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Kruskal-Wallis Test</h3>
+                                <p class="card-subtitle">多組間（三組以上）差異分析</p>
+                            </div>
+                            <div class="card-content">
+                                <p class="mb-2">非參數統計方法，用於比較三個或以上獨立樣本組的數據排名分佈是否存在整體上的顯著差異。</p>
+                                <div class="image-container">
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <p>Kruskal-Wallis Test 結果</p>
+                                        <small>顯著差異物種</small>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="dunn-analysis" class="tab-content">
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Dunn’s Test</h3>
+                                <p class="card-subtitle">多組間的事後檢驗</p>
+                            </div>
+                            <div class="card-content">
+                                <p class="mb-2">Kruskal-Wallis Test 的事後檢驗方法，用於進一步比較特定兩組之間是否存在統計差異。</p>
+                                <div class="image-container">
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <p>Dunn’s Kruskal-Wallis Multiple Comparisons 結果</p>
+                                        <small>顯著差異物種</small>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="lefse-analysis" class="tab-content">
                         <div class="analysis-grid">
+                            <div class="analysis-card">    
+                                <div class="card-header">
+                                    <h3 class="card-title">LEfSe 柱狀圖</h3>
+                                    <p class="card-subtitle">Linear discriminant analysis (LDA) Effect Size - Barplot</p>
+                                </div>
+                                <div class="card-content">
+                                    <p class="mb-2">結合統計顯著性和效應大小，LDA 分數為「效應大小」的量化指標來評估其重要性，用來識別在不同組別間豐度差異最顯著的物種，並將其視為潛在的生物標誌。</p>
+                                    <div class="image-container">
+                                        <div class="viz-placeholder">
+                                            <i class="fas fa-image"></i>
+                                            <p>LEfSe 柱狀圖</p>
+                                            <small>LDA Score > 2.0 的顯著差異物種柱狀圖</small>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="analysis-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">LEfSe 分析</h3>
-                                    <p class="card-subtitle">線性判別分析</p>
+                                    <h3 class="card-title">LEfSe 分類樹狀圖</h3>
+                                    <p class="card-subtitle">Linear discriminant analysis (LDA) Effect Size - Cladogram</p>
                                 </div>
                                 <div class="card-content">
                                     <div class="image-container">
-                                        <img src="images/lefse_analysis.png" 
-                                             alt="LEfSe 柱狀圖與分類樹狀圖" 
-                                             class="analysis-image"
-                                             onclick="openImageModal(this.src)">
-                                        <div class="image-caption">
-                                            <strong>圖 6.</strong> LEfSe 柱狀圖與分類樹狀圖
-                                            <br><small>LDA Score > 2.0 的顯著差異物種</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="analysis-card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Wilcoxon 檢驗</h3>
-                                    <p class="card-subtitle">兩組比較</p>
-                                </div>
-                                <div class="card-content">
-                                    <div class="table-wrapper">
-                                        <table class="data-table">
-                                            <thead>
-                                                <tr><th>物種</th><th>Group A 中位數</th><th>Group B 中位數</th><th>p-value</th></tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>Bacteroides_vulgatus</td><td>0.123</td><td>0.067</td><td>0.032</td></tr>
-                                                <tr><td>Faecalibacterium_prausnitzii</td><td>0.089</td><td>0.145</td><td>0.018</td></tr>
-                                                <tr><td>Prevotella_copri</td><td>0.034</td><td>0.078</td><td>0.005</td></tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="viz-placeholder">
+                                            <i class="fas fa-image"></i>
+                                            <p>LEfSe 分類樹狀圖</p>
+                                            <small>LDA Score > 2.0 的顯著差異物種分類樹狀圖</small>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div id="advanced-analysis" class="tab-content">
-                        <div class="analysis-grid">
-                            <div class="analysis-card">
-                                <div class="card-header">
-                                    <h3 class="card-title">MetagenomeSeq</h3>
-                                    <p class="card-subtitle">零膨脹高斯模型</p>
-                                </div>
-                                <div class="card-content">
-                                    <p class="mb-2">使用 CSS 標準化和零膨脹高斯分佈模型分析物種豐度差異。</p>
-                                    <div class="viz-placeholder">
-                                        <i class="fas fa-chart-line"></i>
-                                        <p>顯著差異物種</p>
-                                        <small>FDR < 0.05</small>
-                                    </div>
-                                </div>
+                    
+                    <div id="metastats-analysis" class="tab-content">
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">MetaStats</h3>
+                                <p class="card-subtitle">相對豐度差異分析</p>
                             </div>
-
-                            <div class="analysis-card">
-                                <div class="card-header">
-                                    <h3 class="card-title">ANCOM-BC</h3>
-                                    <p class="card-subtitle">偏差校正組成分析</p>
-                                </div>
-                                <div class="card-content">
-                                    <p class="mb-2">校正採樣偏差的微生物組成差異分析。</p>
+                            <div class="card-content">
+                                <p class="mb-2">使用相對豐度數據，並結合非參數置換方法和 Fisher’s Exact Test，來評估兩組間物種豐度的顯著性差異，適用於稀疏數據。</p>
+                                <div class="image-container">
                                     <div class="viz-placeholder">
                                         <i class="fas fa-balance-scale"></i>
-                                        <p>偏差校正結果</p>
-                                        <small>Bias-corrected analysis</small>
+                                        <p>相對豐度差異結果</p>
+                                        <small>q-value < 0.05</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div id="metagenomeseq-analysis" class="tab-content">
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">MetagenomeSeq</h3>
+                                <p class="card-subtitle">零膨脹高斯模型</p>
+                            </div>
+                            <div class="card-content">
+                                <p class="mb-2">使用 CSS (Cumulative-Sum Scaling) 標準化方法來校正測序深度差異，並利用零膨脹高斯分佈模型來分析物種豐度差異，能有效處理大量零值。</p>
+                                <div class="image-container">
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-balance-scale"></i>
+                                        <p>MetagenomeSeq 分析結果</p>
+                                        <small>顯著差異物種</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ancombc2-analysis" class="tab-content">    
+                        <div class="analysis-card">
+                            <div class="card-header">
+                                <h3 class="card-title">ANCOM-BC2</h3>
+                                <p class="card-subtitle">偏差校正的物種豐度分析 - Analysis of Compositions of Microbiomes with Bias Correction</p>
+                            </div>
+                            <div class="card-content">
+                                <p class="mb-2">透過對數轉換和線性回歸模型來校正採樣偏差，再進行物種豐度的差異顯著性檢驗。</p>
+                                <div class="image-container">
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-balance-scale"></i>
+                                        <p>ANCOM-BC2 分析結果</p>
+                                        <small>顯著差異物種</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
 
-                <div class="warning-box">
+                <div class="info-box">
                     <strong>顯著性標準：</strong> * p < 0.05, ** p < 0.01, *** p < 0.001, ns = not significant
                 </div>
             </div>
@@ -1620,7 +1076,11 @@
                 </h2>
             </div>
             <div class="section-content">
-                <p class="mb-2">使用 HUMAnN 進行功能分析，透過多個功能資料庫進行基因功能註釋。所有豐度結果以 RPK (Reads Per Kilobase) 表示，目的是為了對基因長度進行標準化，以準確比較不同樣本中的豐度。</p>
+                <p class="mb-2">使用 HUMAnN 3.7 進行功能分析，透過多個功能資料庫進行基因功能註釋。所有豐度結果以 RPK (Reads Per Kilobase) 表示，目的是為了對基因長度進行標準化，以準確比較不同樣本中的豐度。</p>
+                <div class="info-box mb-3">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>RPK 標準化說明：</strong> RPK = 比對到該功能的讀取數 ÷ 該功能基因長度 (kb)，此標準化方法消除了基因長度差異對豐度比較的影響，使不同基因功能間的豐度具有可比性。
+                </div>
 
                 <div class="tab-container">
                     <div class="tab-nav">
@@ -1641,14 +1101,17 @@
                             </div>
                             <div class="card-content">
                                 <div class="image-container">
-                                    <img src="src/images/GO_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/GO_relab_group.png" 
                                          alt="GO註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 10.</strong> GO註釋長條圖
+                                        <strong>GO註釋長條圖</strong>
                                         <br><small>GO 功能豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/GO_RPK_abundance(*).png</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/GO_(*).png
+                                        </small>
                                     </div>
                                 </div>
                                 
@@ -1678,14 +1141,17 @@
                             <div class="card-content">
                                 <p class="mb-2">infoGO (informative subset of GO) 是 GO 的一個特定子集，基於 UniProt 的註釋和 GO 的層次結構為 HUMAnN 計算而來。每個 InfoGO 都有超過 1000 個不同的 UniProt 所註釋，表示每個被選定的 InfoGO 都是訊息豐富的（informative）。</p>
                                 <div class="image-container">
-                                    <img src="src/images/InfoGo_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/InfoGo_relab_group.png" 
                                          alt="infoGO註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 11.</strong> infoGO註釋長條圖
+                                        <strong>infoGO 註釋長條圖</strong>
                                         <br><small>infoGO 功能豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/infoGO_RPK_abundance(*).png</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/infoGO_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1701,14 +1167,17 @@
                             <div class="card-content">
                                 <p class="mb-2">KEGG Orthology（KO）是 KEGG 直系同源資料庫。基於同源基因具有相似功能的假設，將分子功能和基因體資訊連結起來，進而進行跨物種基因體的分子功能註釋。</p>
                                 <div class="image-container">
-                                    <img src="src/images/KO_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/KO_relab_group.png" 
                                          alt="KO註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 12.</strong> KO 註釋長條圖
+                                        <strong>KO 註釋長條圖</strong>
                                         <br><small>KO 功能豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/KO_RPK_abundance(*).png</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/KO_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1724,14 +1193,17 @@
                             <div class="card-content">
                                 <p class="mb-2">EggNOG 資料庫是附屬於 Ensembl 的基因資料庫，提供不同分類階層的蛋白質直系同源組（Orthologous Groups, OGs）與整合的功能註釋。它基於 COG 資料庫的概念，但 EggNOG 囊括了更多的物種構建的非監督的直系同源群。</p>
                                 <div class="image-container">
-                                    <img src="src/images/EggNOG_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/EggNOG_relab_group.png" 
                                          alt="EggNog註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 13.</strong> EggNog註釋長條圖
+                                        <strong>EggNog 註釋長條圖</strong>
                                         <br><small>EggNOG 功能豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/EggNOG_RPK_abundance(*).png</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/EggNOG_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1747,14 +1219,17 @@
                             <div class="card-content">
                                 <p class="mb-2">MetaCyc 資料庫是大型的代謝途徑資料庫，包含了多種物種的代謝途徑和酶反應的詳細資訊。MetaCyc 資料庫的內容是從科學文獻中整理而來，包含了 3,443 種不同的生物體，3,128 個代謝途徑，涉及 18,819 個酶反應和 76,283 篇相關文獻。</p>
                                 <div class="image-container">
-                                    <img src="src/images/MetaCyc_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/MetaCyc_relab_group.png" 
                                          alt="MetaCyc註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 14.</strong> MetaCyc註釋長條圖
+                                        <strong>MetaCyc 註釋長條圖</strong>
                                         <br><small>MetaCyc 途徑豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/MetaCyc_RPK_abundance(*).png</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/MetaCyc_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1770,14 +1245,17 @@
                             <div class="card-content">
                                 <p class="mb-2">ENZYME 資料庫是一個提供酶命名資訊的資料庫，它主要基於國際生物化學與分子生物學聯合會（IUBMB）命名委員會的建議。該資料庫詳細描述了每一種已被賦予 EC（Enzyme Commission）編號的特徵酶。</p>
                                 <div class="image-container">
-                                    <img src="src/images/EC_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/EC_relab_group.png" 
                                          alt="ENZYME註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 15.</strong> ENZYME 註釋長條圖
-                                        <br><small>EC 編號分類豐度</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/ENZYME_RPK_abundance(*).png</small>
+                                        <strong>ENZYME 註釋長條圖</strong>
+                                        <br><small>EC 編號分類豐度分析</small>
+                                        <small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/ENZYME_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1793,14 +1271,17 @@
                             <div class="card-content">
                                 <p class="mb-2">Pfam 資料庫是一個蛋白質資料庫，包含了大量的蛋白質家族和其功能區域的資訊。</p>
                                 <div class="image-container">
-                                    <img src="src/images/Pfam_RPK_abundance.png" 
+                                    <img src="../05.Visualization/03.Functional_Abundance/Pfam_relab_group.png" 
                                          alt="Pfam註釋長條圖" 
                                          class="analysis-image"
                                          onclick="openImageModal(this.src)">
                                     <div class="image-caption">
-                                        <strong>圖 16.</strong> Pfam 註釋長條圖
+                                        <strong>Pfam 註釋長條圖</strong>
                                         <br><small>Pfam 蛋白質家族豐度分析</small>
-                                        <br><small class="file-path">05.Visualization/03.Functional_Aboundance/Pfam_RPK_abundance(*).png</small>
+                                        <br><small class="file-path">
+                                            <i class="fas fa-folder-open"></i>
+                                            路徑：05.Visualization/03.Functional_Abundance/Pfam_(*).png
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -1911,12 +1392,6 @@
                                 <td>箱形圖與統計檢驗</td>
                             </tr>
                             <tr>
-                                <td>Beta Diversity</td>
-                                <td>每組 ≥ 5</td>
-                                <td>每組 ≥ 8</td>
-                                <td>多變量分析</td>
-                            </tr>
-                            <tr>
                                 <td>PERMANOVA</td>
                                 <td>每組 ≥ 5</td>
                                 <td>每組 ≥ 10</td>
@@ -1967,7 +1442,7 @@
                 </div>
 
                 <div class="info-box">
-                    <strong>注意：</strong> 此表格為分析之建議最低樣本條件。實際分析效果會隨樣本數量增加而提升。
+                    <strong>注意：</strong> 此表格為分析之建議最低樣本條件，且組數 ≥ 2。實際分析效果會隨樣本數量增加而提升。
                 </div>
             </div>
         </section>
@@ -1981,1547 +1456,129 @@
                 </h2>
             </div>
             <div class="section-content">
-                <ol style="line-height: 1.8; margin-left: 1.5rem;">
-                    <li>Bolger, A.M., M. Lohse, and B. Usadel, Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 2014. 30(15): p. 2114-20.</li>
-                    <li>Langmead, B. and S.L. Salzberg, Fast gapped-read alignment with Bowtie 2. Nat Methods, 2012. 9(4): p. 357-9.</li>
-                    <li>Blanco-Míguez, A., et al., Extending and improving metagenomic taxonomic profiling with uncharacterized species using MetaPhlAn 4. Nat Biotechnol, 2023.</li>
-                    <li>Pasolli, E., et al., Extensive Unexplored Human Microbiome Diversity Revealed by Over 150,000 Genomes from Metagenomes Spanning Age, Geography, and Lifestyle. Cell, 2019. 176(3): p. 649-662.e20.</li>
-                    <li>Beghini, F., et al., Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. Elife, 2021. 10.</li>
-                    <li>Liu, C., et al., microeco: an R package for data mining in microbial community ecology. FEMS Microbiol Ecol, 2021. 97(2).</li>
-                    <li>Ondov, B.D., N.H. Bergman, and A.M. Phillippy, Interactive metagenomic visualization in a Web browser. BMC Bioinformatics, 2011. 12: p. 385.</li>
+                <div class="references-container">
+                    <ol class="references-list">
+                        <li>
+                            <strong>Trimmomatic:</strong> Bolger, A.M., M. Lohse, and B. Usadel. Trimmomatic: a flexible trimmer for Illumina sequence data. <em>Bioinformatics</em>, 2014. <strong>30</strong>(15): p. 2114-20.
+                            <a href="https://doi.org/10.1093/bioinformatics/btu170" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>Bowtie2:</strong> Langmead, B. and S.L. Salzberg. Fast gapped-read alignment with Bowtie 2. <em>Nature Methods</em>, 2012. <strong>9</strong>(4): p. 357-9.
+                            <a href="https://doi.org/10.1038/nmeth.1923" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>MetaPhlAn 4:</strong> Blanco-Míguez, A., et al. Extending and improving metagenomic taxonomic profiling with uncharacterized species using MetaPhlAn 4. <em>Nature Biotechnology</em>, 2023.
+                            <a href="https://doi.org/10.1038/s41587-023-01688-w" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>ChocoPhlAn:</strong> Pasolli, E., et al. Extensive Unexplored Human Microbiome Diversity Revealed by Over 150,000 Genomes from Metagenomes Spanning Age, Geography, and Lifestyle. <em>Cell</em>, 2019. <strong>176</strong>(3): p. 649-662.e20.
+                            <a href="https://doi.org/10.1016/j.cell.2019.01.001" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>HUMAnN 3:</strong> Beghini, F., et al. Integrating taxonomic, functional, and strain-level profiling of diverse microbial communities with bioBakery 3. <em>eLife</em>, 2021. <strong>10</strong>: e65088.
+                            <a href="https://doi.org/10.7554/eLife.65088" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>microeco:</strong> Liu, C., et al. microeco: an R package for data mining in microbial community ecology. <em>FEMS Microbiology Ecology</em>, 2021. <strong>97</strong>(2): fiaa255.
+                            <a href="https://doi.org/10.1093/femsec/fiaa255" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                        <li>
+                            <strong>Krona:</strong> Ondov, B.D., N.H. Bergman, and A.M. Phillippy. Interactive metagenomic visualization in a Web browser. <em>BMC Bioinformatics</em>, 2011. <strong>12</strong>: p. 385.
+                            <a href="https://doi.org/10.1186/1471-2105-12-385" target="_blank" class="ref-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </li>
+                    </ol>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- Scroll to Top Button -->
-    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
-        <i class="fas fa-chevron-up"></i>
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="回到頂部">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
     </button>
+    
+    <!-- Report Footer -->
+    <footer class="report-footer" role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-tools"></i> 主要工具</h4>
+                <p>MetaPhlAn • HUMAnN • microeco </p>
+                <p>KneadData • Trimmomatic • Bowtie2 </p>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-envelope"></i> 技術支援</h4>
+                <p>圖爾思生物科技股份有限公司</p>
+                <p>Email: <a href="mailto:info@toolsbiotech.com">info@toolsbiotech.com</a></p>
+                <p>Website: <a href="https://www.toolsbiotech.com" target="_blank">www.toolsbiotech.com</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BIOTOOLS Biotechnology Co., Ltd. All rights reserved.</p>
+            <p>本報告由 BIOTOOLS 總體基因體分析平台自動生成</p>
+        </div>
+    </footer>
 
-    <!-- image modal -->
-    <div id="imageModal" class="image-modal">
-        <span class="close" onclick="closeImageModal()">&times;</span>
-        <img id="modalImage" class="modal-content" alt="放大圖片">
+    <!-- Image Modal with Accessibility -->
+    <div id="imageModal" class="image-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-overlay" onclick="closeImageModal()"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modal-title">圖片檢視</h3>
+                <button class="close-btn" onclick="closeImageModal()" aria-label="關閉圖片檢視" tabindex="0">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" class="modal-content" alt="放大圖片" tabindex="0">
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Navigation and Interaction Scripts
-        
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-                
-                if (targetElement) {
-                    // Update active navigation
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Smooth scroll
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Tab switching functionality
-        function switchTab(tabId) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-            
-            // Add active class to clicked button
-            event.target.classList.add('active');
-        }
-
-        // Mobile sidebar toggle
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
-
-        // Collapse section functionality
-        document.querySelectorAll('.collapse-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const section = this.closest('.content-section');
-                const content = section.querySelector('.section-content');
-                const icon = this.querySelector('i');
-                
-                if (content.style.display === 'none') {
-                    content.style.display = 'block';
-                    icon.classList.remove('fa-chevron-down');
-                    icon.classList.add('fa-chevron-up');
-                } else {
-                    content.style.display = 'none';
-                    icon.classList.remove('fa-chevron-up');
-                    icon.classList.add('fa-chevron-down');
-                }
-            });
-        });
-
-        // Scroll to top functionality
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
-        // Show/hide scroll to top button
-        window.addEventListener('scroll', function() {
-            const scrollTop = document.getElementById('scrollTop');
-            if (window.pageYOffset > 300) {
-                scrollTop.classList.add('visible');
-            } else {
-                scrollTop.classList.remove('visible');
-            }
-        });
-
-        // Auto-update navigation based on scroll position
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('.content-section');
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            let currentSection = '';
-            
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                if (rect.top <= 100 && rect.bottom >= 100) {
-                    currentSection = section.id;
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + currentSection) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Add animation to cards on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all cards for animation
-        document.querySelectorAll('.analysis-card, .summary-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Initialize progress bar animation
-        setTimeout(() => {
-            document.querySelector('.progress-fill').style.width = '100%';
-        }, 1000);
-
-        // Add loading simulation for visualizations
-        document.querySelectorAll('.viz-placeholder').forEach(placeholder => {
-            placeholder.addEventListener('click', function() {
-                const loading = document.createElement('div');
-                loading.className = 'loading';
-                this.appendChild(loading);
-                
-                setTimeout(() => {
-                    loading.remove();
-                    // Here you would load actual visualization
-                }, 2000);
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            const sidebar = document.getElementById('sidebar');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            
-            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-                sidebar.classList.remove('open');
-            }
-        });
-
-        // Keyboard navigation support
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('sidebar').classList.remove('open');
-            }
-        });
-
-        // Print optimization
-        window.addEventListener('beforeprint', function() {
-            // Expand all collapsed sections for printing
-            document.querySelectorAll('.section-content').forEach(content => {
-                content.style.display = 'block';
-            });
-            
-            // Show all tab contents for printing
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.style.display = 'block';
-            });
-        });
-
-        // Responsive table scrolling
-        document.querySelectorAll('.data-table').forEach(table => {
-            const wrapper = document.createElement('div');
-            wrapper.style.overflowX = 'auto';
-            table.parentNode.insertBefore(wrapper, table);
-            wrapper.appendChild(table);
-        });
-    </script>
-    <script src="src/js/data_injection.js"></script>
+ 
+    <script src="src/js/biotools-report.js"></script>
+    <!-- DATA_INJECTION_POINT -->
     
-                <script>
-                // 注入分析數據並初始化
-                console.log('Injecting data:', {
-  "project_id": "BI-ANA-9096",
-  "qc_stats": [
-    {
-      "sample": "S001R001_V01",
-      "raw_reads": 281063992,
-      "trimmed_reads": 261089285,
-      "decontaminated_reads": 171671572,
-      "decon_raw_percent": 61.1,
-      "decon_trimmed_percent": 65.8
-    },
-    {
-      "sample": "S001R001_V05",
-      "raw_reads": 102367766,
-      "trimmed_reads": 96937324,
-      "decontaminated_reads": 1423170,
-      "decon_raw_percent": 1.4,
-      "decon_trimmed_percent": 1.5
-    },
-    {
-      "sample": "S002R002_V01",
-      "raw_reads": 84454212,
-      "trimmed_reads": 76898369,
-      "decontaminated_reads": 76511809,
-      "decon_raw_percent": 90.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S003R003_V01",
-      "raw_reads": 92082724,
-      "trimmed_reads": 87522260,
-      "decontaminated_reads": 27224754,
-      "decon_raw_percent": 29.6,
-      "decon_trimmed_percent": 31.1
-    },
-    {
-      "sample": "S003R003_V05",
-      "raw_reads": 91694734,
-      "trimmed_reads": 84385653,
-      "decontaminated_reads": 82574349,
-      "decon_raw_percent": 90.1,
-      "decon_trimmed_percent": 97.9
-    },
-    {
-      "sample": "S003R003_V06",
-      "raw_reads": 136071176,
-      "trimmed_reads": 130111798,
-      "decontaminated_reads": 85309657,
-      "decon_raw_percent": 62.7,
-      "decon_trimmed_percent": 65.6
-    },
-    {
-      "sample": "S008R004_V01",
-      "raw_reads": 259364642,
-      "trimmed_reads": 245178375,
-      "decontaminated_reads": 243566359,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S008R004_V05",
-      "raw_reads": 91718424,
-      "trimmed_reads": 83840103,
-      "decontaminated_reads": 83362050,
-      "decon_raw_percent": 90.9,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S008R004_V06",
-      "raw_reads": 116086968,
-      "trimmed_reads": 109631538,
-      "decontaminated_reads": 108129206,
-      "decon_raw_percent": 93.1,
-      "decon_trimmed_percent": 98.6
-    },
-    {
-      "sample": "S009R005_V01",
-      "raw_reads": 239484596,
-      "trimmed_reads": 226986919,
-      "decontaminated_reads": 181629787,
-      "decon_raw_percent": 75.8,
-      "decon_trimmed_percent": 80.0
-    },
-    {
-      "sample": "S009R005_V05",
-      "raw_reads": 177097416,
-      "trimmed_reads": 141367502,
-      "decontaminated_reads": 121201007,
-      "decon_raw_percent": 68.4,
-      "decon_trimmed_percent": 85.7
-    },
-    {
-      "sample": "S009R005_V06",
-      "raw_reads": 101996722,
-      "trimmed_reads": 97156395,
-      "decontaminated_reads": 95948838,
-      "decon_raw_percent": 94.1,
-      "decon_trimmed_percent": 98.8
-    },
-    {
-      "sample": "S012R006_V01",
-      "raw_reads": 291421508,
-      "trimmed_reads": 278232375,
-      "decontaminated_reads": 276217276,
-      "decon_raw_percent": 94.8,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S012R006_V05",
-      "raw_reads": 168205564,
-      "trimmed_reads": 159031045,
-      "decontaminated_reads": 154689246,
-      "decon_raw_percent": 92.0,
-      "decon_trimmed_percent": 97.3
-    },
-    {
-      "sample": "S012R006_V06",
-      "raw_reads": 116288978,
-      "trimmed_reads": 108987117,
-      "decontaminated_reads": 104360212,
-      "decon_raw_percent": 89.7,
-      "decon_trimmed_percent": 95.8
-    },
-    {
-      "sample": "S014R034_V01",
-      "raw_reads": 274868916,
-      "trimmed_reads": 262034712,
-      "decontaminated_reads": 259468310,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.0
-    },
-    {
-      "sample": "S014R034_V05",
-      "raw_reads": 122538866,
-      "trimmed_reads": 114840873,
-      "decontaminated_reads": 112030533,
-      "decon_raw_percent": 91.4,
-      "decon_trimmed_percent": 97.6
-    },
-    {
-      "sample": "S014R034_V06",
-      "raw_reads": 103946882,
-      "trimmed_reads": 97356899,
-      "decontaminated_reads": 83213035,
-      "decon_raw_percent": 80.1,
-      "decon_trimmed_percent": 85.5
-    },
-    {
-      "sample": "S201R021_V01",
-      "raw_reads": 311730840,
-      "trimmed_reads": 272857812,
-      "decontaminated_reads": 261637544,
-      "decon_raw_percent": 83.9,
-      "decon_trimmed_percent": 95.9
-    },
-    {
-      "sample": "S201R021_V05",
-      "raw_reads": 183044648,
-      "trimmed_reads": 149943913,
-      "decontaminated_reads": 149124478,
-      "decon_raw_percent": 81.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S201R021_V06",
-      "raw_reads": 196150438,
-      "trimmed_reads": 164962851,
-      "decontaminated_reads": 164216512,
-      "decon_raw_percent": 83.7,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S202R022_V01",
-      "raw_reads": 363764304,
-      "trimmed_reads": 296514455,
-      "decontaminated_reads": 294997321,
-      "decon_raw_percent": 81.1,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S202R022_V05",
-      "raw_reads": 169987562,
-      "trimmed_reads": 159718070,
-      "decontaminated_reads": 152345191,
-      "decon_raw_percent": 89.6,
-      "decon_trimmed_percent": 95.4
-    },
-    {
-      "sample": "S202R022_V06",
-      "raw_reads": 173328286,
-      "trimmed_reads": 165451590,
-      "decontaminated_reads": 164744177,
-      "decon_raw_percent": 95.0,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S203R025_V01",
-      "raw_reads": 271106738,
-      "trimmed_reads": 253678522,
-      "decontaminated_reads": 248062132,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 97.8
-    },
-    {
-      "sample": "S203R025_V05",
-      "raw_reads": 132740882,
-      "trimmed_reads": 126148061,
-      "decontaminated_reads": 124634013,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 98.8
-    },
-    {
-      "sample": "S203R025_V06",
-      "raw_reads": 148160892,
-      "trimmed_reads": 119161410,
-      "decontaminated_reads": 118468393,
-      "decon_raw_percent": 80.0,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S204R024_V01",
-      "raw_reads": 231244630,
-      "trimmed_reads": 219165721,
-      "decontaminated_reads": 217451161,
-      "decon_raw_percent": 94.0,
-      "decon_trimmed_percent": 99.2
-    },
-    {
-      "sample": "S204R024_V05",
-      "raw_reads": 147731694,
-      "trimmed_reads": 136304590,
-      "decontaminated_reads": 135625201,
-      "decon_raw_percent": 91.8,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S204R024_V06",
-      "raw_reads": 180658898,
-      "trimmed_reads": 169182051,
-      "decontaminated_reads": 168310771,
-      "decon_raw_percent": 93.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S206R026_V01",
-      "raw_reads": 330241502,
-      "trimmed_reads": 289178924,
-      "decontaminated_reads": 287063433,
-      "decon_raw_percent": 86.9,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S206R026_V05",
-      "raw_reads": 111968282,
-      "trimmed_reads": 107621412,
-      "decontaminated_reads": 107146359,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S206R026_V06",
-      "raw_reads": 131709532,
-      "trimmed_reads": 121096896,
-      "decontaminated_reads": 120550380,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S207R027_V01",
-      "raw_reads": 312532412,
-      "trimmed_reads": 286684672,
-      "decontaminated_reads": 285632629,
-      "decon_raw_percent": 91.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S207R027_V05",
-      "raw_reads": 111010904,
-      "trimmed_reads": 106229251,
-      "decontaminated_reads": 105712838,
-      "decon_raw_percent": 95.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S207R027_V06",
-      "raw_reads": 180583996,
-      "trimmed_reads": 173309775,
-      "decontaminated_reads": 172640176,
-      "decon_raw_percent": 95.6,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S209R028_V01",
-      "raw_reads": 251475086,
-      "trimmed_reads": 240086604,
-      "decontaminated_reads": 235316930,
-      "decon_raw_percent": 93.6,
-      "decon_trimmed_percent": 98.0
-    },
-    {
-      "sample": "S209R028_V05",
-      "raw_reads": 153717260,
-      "trimmed_reads": 144810508,
-      "decontaminated_reads": 143799299,
-      "decon_raw_percent": 93.5,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S209R028_V06",
-      "raw_reads": 84075278,
-      "trimmed_reads": 78996991,
-      "decontaminated_reads": 78551040,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S301R009_V01",
-      "raw_reads": 205032622,
-      "trimmed_reads": 174633286,
-      "decontaminated_reads": 169947184,
-      "decon_raw_percent": 82.9,
-      "decon_trimmed_percent": 97.3
-    },
-    {
-      "sample": "S301R009_V05",
-      "raw_reads": 107197540,
-      "trimmed_reads": 84038380,
-      "decontaminated_reads": 79264707,
-      "decon_raw_percent": 73.9,
-      "decon_trimmed_percent": 94.3
-    },
-    {
-      "sample": "S301R009_V06",
-      "raw_reads": 104287270,
-      "trimmed_reads": 98396359,
-      "decontaminated_reads": 67776942,
-      "decon_raw_percent": 65.0,
-      "decon_trimmed_percent": 68.9
-    },
-    {
-      "sample": "S302R010_V01",
-      "raw_reads": 207315776,
-      "trimmed_reads": 175060452,
-      "decontaminated_reads": 174260384,
-      "decon_raw_percent": 84.1,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S302R010_V05",
-      "raw_reads": 109098516,
-      "trimmed_reads": 102710817,
-      "decontaminated_reads": 102299220,
-      "decon_raw_percent": 93.8,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S302R010_V06",
-      "raw_reads": 90262548,
-      "trimmed_reads": 85081578,
-      "decontaminated_reads": 84749096,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S303R011_V01",
-      "raw_reads": 205176320,
-      "trimmed_reads": 197086106,
-      "decontaminated_reads": 196300631,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S303R011_V05",
-      "raw_reads": 122064178,
-      "trimmed_reads": 118874158,
-      "decontaminated_reads": 118322679,
-      "decon_raw_percent": 96.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S303R011_V06",
-      "raw_reads": 98174032,
-      "trimmed_reads": 94585330,
-      "decontaminated_reads": 93974132,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S304R012_V01",
-      "raw_reads": 201492186,
-      "trimmed_reads": 193978674,
-      "decontaminated_reads": 193179220,
-      "decon_raw_percent": 95.9,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S304R012_V05",
-      "raw_reads": 123922314,
-      "trimmed_reads": 118023191,
-      "decontaminated_reads": 116174144,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 98.4
-    },
-    {
-      "sample": "S304R012_V06",
-      "raw_reads": 93634360,
-      "trimmed_reads": 89387975,
-      "decontaminated_reads": 88693347,
-      "decon_raw_percent": 94.7,
-      "decon_trimmed_percent": 99.2
-    },
-    {
-      "sample": "S305R013_V01",
-      "raw_reads": 221928290,
-      "trimmed_reads": 203969359,
-      "decontaminated_reads": 203125651,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S305R013_V05",
-      "raw_reads": 96210974,
-      "trimmed_reads": 92317219,
-      "decontaminated_reads": 91906754,
-      "decon_raw_percent": 95.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S305R013_V06",
-      "raw_reads": 94962038,
-      "trimmed_reads": 89260104,
-      "decontaminated_reads": 88784817,
-      "decon_raw_percent": 93.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S306R014_V01",
-      "raw_reads": 226608456,
-      "trimmed_reads": 173983819,
-      "decontaminated_reads": 170591835,
-      "decon_raw_percent": 75.3,
-      "decon_trimmed_percent": 98.1
-    },
-    {
-      "sample": "S306R014_V05",
-      "raw_reads": 128651192,
-      "trimmed_reads": 99441927,
-      "decontaminated_reads": 98945061,
-      "decon_raw_percent": 76.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S306R014_V06",
-      "raw_reads": 89490570,
-      "trimmed_reads": 85734784,
-      "decontaminated_reads": 83848746,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 97.8
-    },
-    {
-      "sample": "S307R015_V01",
-      "raw_reads": 203479412,
-      "trimmed_reads": 195018350,
-      "decontaminated_reads": 194170923,
-      "decon_raw_percent": 95.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S307R015_V05",
-      "raw_reads": 108820912,
-      "trimmed_reads": 104396347,
-      "decontaminated_reads": 103972793,
-      "decon_raw_percent": 95.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S307R015_V06",
-      "raw_reads": 102919026,
-      "trimmed_reads": 97571322,
-      "decontaminated_reads": 97167295,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S308R016_V01",
-      "raw_reads": 163682600,
-      "trimmed_reads": 154766338,
-      "decontaminated_reads": 146161699,
-      "decon_raw_percent": 89.3,
-      "decon_trimmed_percent": 94.4
-    },
-    {
-      "sample": "S308R016_V05",
-      "raw_reads": 75141868,
-      "trimmed_reads": 71373593,
-      "decontaminated_reads": 71055411,
-      "decon_raw_percent": 94.6,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S308R016_V06",
-      "raw_reads": 76378382,
-      "trimmed_reads": 72214955,
-      "decontaminated_reads": 71898792,
-      "decon_raw_percent": 94.1,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S309R017_V01",
-      "raw_reads": 164800510,
-      "trimmed_reads": 155869323,
-      "decontaminated_reads": 155160342,
-      "decon_raw_percent": 94.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S309R017_V03",
-      "raw_reads": 80225096,
-      "trimmed_reads": 77323782,
-      "decontaminated_reads": 76954851,
-      "decon_raw_percent": 95.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S310R018_V01",
-      "raw_reads": 164895998,
-      "trimmed_reads": 157367589,
-      "decontaminated_reads": 156733181,
-      "decon_raw_percent": 95.0,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S310R018_V05",
-      "raw_reads": 82446296,
-      "trimmed_reads": 76720816,
-      "decontaminated_reads": 23390771,
-      "decon_raw_percent": 28.4,
-      "decon_trimmed_percent": 30.5
-    },
-    {
-      "sample": "S310R018_V06",
-      "raw_reads": 97885088,
-      "trimmed_reads": 91043505,
-      "decontaminated_reads": 24206115,
-      "decon_raw_percent": 24.7,
-      "decon_trimmed_percent": 26.6
-    },
-    {
-      "sample": "S311R019_V01",
-      "raw_reads": 146806664,
-      "trimmed_reads": 138493011,
-      "decontaminated_reads": 137183930,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S311R019_V05",
-      "raw_reads": 75273352,
-      "trimmed_reads": 71624472,
-      "decontaminated_reads": 46008152,
-      "decon_raw_percent": 61.1,
-      "decon_trimmed_percent": 64.2
-    },
-    {
-      "sample": "S311R019_V06",
-      "raw_reads": 79731018,
-      "trimmed_reads": 73846393,
-      "decontaminated_reads": 66044582,
-      "decon_raw_percent": 82.8,
-      "decon_trimmed_percent": 89.4
-    },
-    {
-      "sample": "S312R020_V01",
-      "raw_reads": 146837136,
-      "trimmed_reads": 135911275,
-      "decontaminated_reads": 132594108,
-      "decon_raw_percent": 90.3,
-      "decon_trimmed_percent": 97.6
-    },
-    {
-      "sample": "S312R020_V05",
-      "raw_reads": 81666074,
-      "trimmed_reads": 77526358,
-      "decontaminated_reads": 77130801,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S312R020_V06",
-      "raw_reads": 101371904,
-      "trimmed_reads": 96465342,
-      "decontaminated_reads": 96037109,
-      "decon_raw_percent": 94.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S313R038_V01",
-      "raw_reads": 165223858,
-      "trimmed_reads": 156348454,
-      "decontaminated_reads": 98277123,
-      "decon_raw_percent": 59.5,
-      "decon_trimmed_percent": 62.9
-    },
-    {
-      "sample": "S313R038_V05",
-      "raw_reads": 72283880,
-      "trimmed_reads": 68109072,
-      "decontaminated_reads": 67524670,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S313R038_V06",
-      "raw_reads": 100416364,
-      "trimmed_reads": 78197376,
-      "decontaminated_reads": 77469708,
-      "decon_raw_percent": 77.1,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S401R031_V01",
-      "raw_reads": 206087584,
-      "trimmed_reads": 192535966,
-      "decontaminated_reads": 191455270,
-      "decon_raw_percent": 92.9,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S401R031_V05",
-      "raw_reads": 74709688,
-      "trimmed_reads": 69566913,
-      "decontaminated_reads": 69201820,
-      "decon_raw_percent": 92.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S401R031_V06",
-      "raw_reads": 87131264,
-      "trimmed_reads": 77182462,
-      "decontaminated_reads": 76708600,
-      "decon_raw_percent": 88.0,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S402R032_V01",
-      "raw_reads": 183545620,
-      "trimmed_reads": 141197460,
-      "decontaminated_reads": 140512220,
-      "decon_raw_percent": 76.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S402R032_V04",
-      "raw_reads": 73534200,
-      "trimmed_reads": 69313260,
-      "decontaminated_reads": 68879709,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 99.4
-    }
-  ]
-});
-                setAnalysisData({
-  "project_id": "BI-ANA-9096",
-  "qc_stats": [
-    {
-      "sample": "S001R001_V01",
-      "raw_reads": 281063992,
-      "trimmed_reads": 261089285,
-      "decontaminated_reads": 171671572,
-      "decon_raw_percent": 61.1,
-      "decon_trimmed_percent": 65.8
-    },
-    {
-      "sample": "S001R001_V05",
-      "raw_reads": 102367766,
-      "trimmed_reads": 96937324,
-      "decontaminated_reads": 1423170,
-      "decon_raw_percent": 1.4,
-      "decon_trimmed_percent": 1.5
-    },
-    {
-      "sample": "S002R002_V01",
-      "raw_reads": 84454212,
-      "trimmed_reads": 76898369,
-      "decontaminated_reads": 76511809,
-      "decon_raw_percent": 90.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S003R003_V01",
-      "raw_reads": 92082724,
-      "trimmed_reads": 87522260,
-      "decontaminated_reads": 27224754,
-      "decon_raw_percent": 29.6,
-      "decon_trimmed_percent": 31.1
-    },
-    {
-      "sample": "S003R003_V05",
-      "raw_reads": 91694734,
-      "trimmed_reads": 84385653,
-      "decontaminated_reads": 82574349,
-      "decon_raw_percent": 90.1,
-      "decon_trimmed_percent": 97.9
-    },
-    {
-      "sample": "S003R003_V06",
-      "raw_reads": 136071176,
-      "trimmed_reads": 130111798,
-      "decontaminated_reads": 85309657,
-      "decon_raw_percent": 62.7,
-      "decon_trimmed_percent": 65.6
-    },
-    {
-      "sample": "S008R004_V01",
-      "raw_reads": 259364642,
-      "trimmed_reads": 245178375,
-      "decontaminated_reads": 243566359,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S008R004_V05",
-      "raw_reads": 91718424,
-      "trimmed_reads": 83840103,
-      "decontaminated_reads": 83362050,
-      "decon_raw_percent": 90.9,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S008R004_V06",
-      "raw_reads": 116086968,
-      "trimmed_reads": 109631538,
-      "decontaminated_reads": 108129206,
-      "decon_raw_percent": 93.1,
-      "decon_trimmed_percent": 98.6
-    },
-    {
-      "sample": "S009R005_V01",
-      "raw_reads": 239484596,
-      "trimmed_reads": 226986919,
-      "decontaminated_reads": 181629787,
-      "decon_raw_percent": 75.8,
-      "decon_trimmed_percent": 80.0
-    },
-    {
-      "sample": "S009R005_V05",
-      "raw_reads": 177097416,
-      "trimmed_reads": 141367502,
-      "decontaminated_reads": 121201007,
-      "decon_raw_percent": 68.4,
-      "decon_trimmed_percent": 85.7
-    },
-    {
-      "sample": "S009R005_V06",
-      "raw_reads": 101996722,
-      "trimmed_reads": 97156395,
-      "decontaminated_reads": 95948838,
-      "decon_raw_percent": 94.1,
-      "decon_trimmed_percent": 98.8
-    },
-    {
-      "sample": "S012R006_V01",
-      "raw_reads": 291421508,
-      "trimmed_reads": 278232375,
-      "decontaminated_reads": 276217276,
-      "decon_raw_percent": 94.8,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S012R006_V05",
-      "raw_reads": 168205564,
-      "trimmed_reads": 159031045,
-      "decontaminated_reads": 154689246,
-      "decon_raw_percent": 92.0,
-      "decon_trimmed_percent": 97.3
-    },
-    {
-      "sample": "S012R006_V06",
-      "raw_reads": 116288978,
-      "trimmed_reads": 108987117,
-      "decontaminated_reads": 104360212,
-      "decon_raw_percent": 89.7,
-      "decon_trimmed_percent": 95.8
-    },
-    {
-      "sample": "S014R034_V01",
-      "raw_reads": 274868916,
-      "trimmed_reads": 262034712,
-      "decontaminated_reads": 259468310,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.0
-    },
-    {
-      "sample": "S014R034_V05",
-      "raw_reads": 122538866,
-      "trimmed_reads": 114840873,
-      "decontaminated_reads": 112030533,
-      "decon_raw_percent": 91.4,
-      "decon_trimmed_percent": 97.6
-    },
-    {
-      "sample": "S014R034_V06",
-      "raw_reads": 103946882,
-      "trimmed_reads": 97356899,
-      "decontaminated_reads": 83213035,
-      "decon_raw_percent": 80.1,
-      "decon_trimmed_percent": 85.5
-    },
-    {
-      "sample": "S201R021_V01",
-      "raw_reads": 311730840,
-      "trimmed_reads": 272857812,
-      "decontaminated_reads": 261637544,
-      "decon_raw_percent": 83.9,
-      "decon_trimmed_percent": 95.9
-    },
-    {
-      "sample": "S201R021_V05",
-      "raw_reads": 183044648,
-      "trimmed_reads": 149943913,
-      "decontaminated_reads": 149124478,
-      "decon_raw_percent": 81.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S201R021_V06",
-      "raw_reads": 196150438,
-      "trimmed_reads": 164962851,
-      "decontaminated_reads": 164216512,
-      "decon_raw_percent": 83.7,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S202R022_V01",
-      "raw_reads": 363764304,
-      "trimmed_reads": 296514455,
-      "decontaminated_reads": 294997321,
-      "decon_raw_percent": 81.1,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S202R022_V05",
-      "raw_reads": 169987562,
-      "trimmed_reads": 159718070,
-      "decontaminated_reads": 152345191,
-      "decon_raw_percent": 89.6,
-      "decon_trimmed_percent": 95.4
-    },
-    {
-      "sample": "S202R022_V06",
-      "raw_reads": 173328286,
-      "trimmed_reads": 165451590,
-      "decontaminated_reads": 164744177,
-      "decon_raw_percent": 95.0,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S203R025_V01",
-      "raw_reads": 271106738,
-      "trimmed_reads": 253678522,
-      "decontaminated_reads": 248062132,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 97.8
-    },
-    {
-      "sample": "S203R025_V05",
-      "raw_reads": 132740882,
-      "trimmed_reads": 126148061,
-      "decontaminated_reads": 124634013,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 98.8
-    },
-    {
-      "sample": "S203R025_V06",
-      "raw_reads": 148160892,
-      "trimmed_reads": 119161410,
-      "decontaminated_reads": 118468393,
-      "decon_raw_percent": 80.0,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S204R024_V01",
-      "raw_reads": 231244630,
-      "trimmed_reads": 219165721,
-      "decontaminated_reads": 217451161,
-      "decon_raw_percent": 94.0,
-      "decon_trimmed_percent": 99.2
-    },
-    {
-      "sample": "S204R024_V05",
-      "raw_reads": 147731694,
-      "trimmed_reads": 136304590,
-      "decontaminated_reads": 135625201,
-      "decon_raw_percent": 91.8,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S204R024_V06",
-      "raw_reads": 180658898,
-      "trimmed_reads": 169182051,
-      "decontaminated_reads": 168310771,
-      "decon_raw_percent": 93.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S206R026_V01",
-      "raw_reads": 330241502,
-      "trimmed_reads": 289178924,
-      "decontaminated_reads": 287063433,
-      "decon_raw_percent": 86.9,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S206R026_V05",
-      "raw_reads": 111968282,
-      "trimmed_reads": 107621412,
-      "decontaminated_reads": 107146359,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S206R026_V06",
-      "raw_reads": 131709532,
-      "trimmed_reads": 121096896,
-      "decontaminated_reads": 120550380,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S207R027_V01",
-      "raw_reads": 312532412,
-      "trimmed_reads": 286684672,
-      "decontaminated_reads": 285632629,
-      "decon_raw_percent": 91.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S207R027_V05",
-      "raw_reads": 111010904,
-      "trimmed_reads": 106229251,
-      "decontaminated_reads": 105712838,
-      "decon_raw_percent": 95.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S207R027_V06",
-      "raw_reads": 180583996,
-      "trimmed_reads": 173309775,
-      "decontaminated_reads": 172640176,
-      "decon_raw_percent": 95.6,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S209R028_V01",
-      "raw_reads": 251475086,
-      "trimmed_reads": 240086604,
-      "decontaminated_reads": 235316930,
-      "decon_raw_percent": 93.6,
-      "decon_trimmed_percent": 98.0
-    },
-    {
-      "sample": "S209R028_V05",
-      "raw_reads": 153717260,
-      "trimmed_reads": 144810508,
-      "decontaminated_reads": 143799299,
-      "decon_raw_percent": 93.5,
-      "decon_trimmed_percent": 99.3
-    },
-    {
-      "sample": "S209R028_V06",
-      "raw_reads": 84075278,
-      "trimmed_reads": 78996991,
-      "decontaminated_reads": 78551040,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S301R009_V01",
-      "raw_reads": 205032622,
-      "trimmed_reads": 174633286,
-      "decontaminated_reads": 169947184,
-      "decon_raw_percent": 82.9,
-      "decon_trimmed_percent": 97.3
-    },
-    {
-      "sample": "S301R009_V05",
-      "raw_reads": 107197540,
-      "trimmed_reads": 84038380,
-      "decontaminated_reads": 79264707,
-      "decon_raw_percent": 73.9,
-      "decon_trimmed_percent": 94.3
-    },
-    {
-      "sample": "S301R009_V06",
-      "raw_reads": 104287270,
-      "trimmed_reads": 98396359,
-      "decontaminated_reads": 67776942,
-      "decon_raw_percent": 65.0,
-      "decon_trimmed_percent": 68.9
-    },
-    {
-      "sample": "S302R010_V01",
-      "raw_reads": 207315776,
-      "trimmed_reads": 175060452,
-      "decontaminated_reads": 174260384,
-      "decon_raw_percent": 84.1,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S302R010_V05",
-      "raw_reads": 109098516,
-      "trimmed_reads": 102710817,
-      "decontaminated_reads": 102299220,
-      "decon_raw_percent": 93.8,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S302R010_V06",
-      "raw_reads": 90262548,
-      "trimmed_reads": 85081578,
-      "decontaminated_reads": 84749096,
-      "decon_raw_percent": 93.9,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S303R011_V01",
-      "raw_reads": 205176320,
-      "trimmed_reads": 197086106,
-      "decontaminated_reads": 196300631,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S303R011_V05",
-      "raw_reads": 122064178,
-      "trimmed_reads": 118874158,
-      "decontaminated_reads": 118322679,
-      "decon_raw_percent": 96.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S303R011_V06",
-      "raw_reads": 98174032,
-      "trimmed_reads": 94585330,
-      "decontaminated_reads": 93974132,
-      "decon_raw_percent": 95.7,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S304R012_V01",
-      "raw_reads": 201492186,
-      "trimmed_reads": 193978674,
-      "decontaminated_reads": 193179220,
-      "decon_raw_percent": 95.9,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S304R012_V05",
-      "raw_reads": 123922314,
-      "trimmed_reads": 118023191,
-      "decontaminated_reads": 116174144,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 98.4
-    },
-    {
-      "sample": "S304R012_V06",
-      "raw_reads": 93634360,
-      "trimmed_reads": 89387975,
-      "decontaminated_reads": 88693347,
-      "decon_raw_percent": 94.7,
-      "decon_trimmed_percent": 99.2
-    },
-    {
-      "sample": "S305R013_V01",
-      "raw_reads": 221928290,
-      "trimmed_reads": 203969359,
-      "decontaminated_reads": 203125651,
-      "decon_raw_percent": 91.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S305R013_V05",
-      "raw_reads": 96210974,
-      "trimmed_reads": 92317219,
-      "decontaminated_reads": 91906754,
-      "decon_raw_percent": 95.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S305R013_V06",
-      "raw_reads": 94962038,
-      "trimmed_reads": 89260104,
-      "decontaminated_reads": 88784817,
-      "decon_raw_percent": 93.5,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S306R014_V01",
-      "raw_reads": 226608456,
-      "trimmed_reads": 173983819,
-      "decontaminated_reads": 170591835,
-      "decon_raw_percent": 75.3,
-      "decon_trimmed_percent": 98.1
-    },
-    {
-      "sample": "S306R014_V05",
-      "raw_reads": 128651192,
-      "trimmed_reads": 99441927,
-      "decontaminated_reads": 98945061,
-      "decon_raw_percent": 76.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S306R014_V06",
-      "raw_reads": 89490570,
-      "trimmed_reads": 85734784,
-      "decontaminated_reads": 83848746,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 97.8
-    },
-    {
-      "sample": "S307R015_V01",
-      "raw_reads": 203479412,
-      "trimmed_reads": 195018350,
-      "decontaminated_reads": 194170923,
-      "decon_raw_percent": 95.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S307R015_V05",
-      "raw_reads": 108820912,
-      "trimmed_reads": 104396347,
-      "decontaminated_reads": 103972793,
-      "decon_raw_percent": 95.5,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S307R015_V06",
-      "raw_reads": 102919026,
-      "trimmed_reads": 97571322,
-      "decontaminated_reads": 97167295,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S308R016_V01",
-      "raw_reads": 163682600,
-      "trimmed_reads": 154766338,
-      "decontaminated_reads": 146161699,
-      "decon_raw_percent": 89.3,
-      "decon_trimmed_percent": 94.4
-    },
-    {
-      "sample": "S308R016_V05",
-      "raw_reads": 75141868,
-      "trimmed_reads": 71373593,
-      "decontaminated_reads": 71055411,
-      "decon_raw_percent": 94.6,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S308R016_V06",
-      "raw_reads": 76378382,
-      "trimmed_reads": 72214955,
-      "decontaminated_reads": 71898792,
-      "decon_raw_percent": 94.1,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S309R017_V01",
-      "raw_reads": 164800510,
-      "trimmed_reads": 155869323,
-      "decontaminated_reads": 155160342,
-      "decon_raw_percent": 94.2,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S309R017_V03",
-      "raw_reads": 80225096,
-      "trimmed_reads": 77323782,
-      "decontaminated_reads": 76954851,
-      "decon_raw_percent": 95.9,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S310R018_V01",
-      "raw_reads": 164895998,
-      "trimmed_reads": 157367589,
-      "decontaminated_reads": 156733181,
-      "decon_raw_percent": 95.0,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S310R018_V05",
-      "raw_reads": 82446296,
-      "trimmed_reads": 76720816,
-      "decontaminated_reads": 23390771,
-      "decon_raw_percent": 28.4,
-      "decon_trimmed_percent": 30.5
-    },
-    {
-      "sample": "S310R018_V06",
-      "raw_reads": 97885088,
-      "trimmed_reads": 91043505,
-      "decontaminated_reads": 24206115,
-      "decon_raw_percent": 24.7,
-      "decon_trimmed_percent": 26.6
-    },
-    {
-      "sample": "S311R019_V01",
-      "raw_reads": 146806664,
-      "trimmed_reads": 138493011,
-      "decontaminated_reads": 137183930,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S311R019_V05",
-      "raw_reads": 75273352,
-      "trimmed_reads": 71624472,
-      "decontaminated_reads": 46008152,
-      "decon_raw_percent": 61.1,
-      "decon_trimmed_percent": 64.2
-    },
-    {
-      "sample": "S311R019_V06",
-      "raw_reads": 79731018,
-      "trimmed_reads": 73846393,
-      "decontaminated_reads": 66044582,
-      "decon_raw_percent": 82.8,
-      "decon_trimmed_percent": 89.4
-    },
-    {
-      "sample": "S312R020_V01",
-      "raw_reads": 146837136,
-      "trimmed_reads": 135911275,
-      "decontaminated_reads": 132594108,
-      "decon_raw_percent": 90.3,
-      "decon_trimmed_percent": 97.6
-    },
-    {
-      "sample": "S312R020_V05",
-      "raw_reads": 81666074,
-      "trimmed_reads": 77526358,
-      "decontaminated_reads": 77130801,
-      "decon_raw_percent": 94.4,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S312R020_V06",
-      "raw_reads": 101371904,
-      "trimmed_reads": 96465342,
-      "decontaminated_reads": 96037109,
-      "decon_raw_percent": 94.7,
-      "decon_trimmed_percent": 99.6
-    },
-    {
-      "sample": "S313R038_V01",
-      "raw_reads": 165223858,
-      "trimmed_reads": 156348454,
-      "decontaminated_reads": 98277123,
-      "decon_raw_percent": 59.5,
-      "decon_trimmed_percent": 62.9
-    },
-    {
-      "sample": "S313R038_V05",
-      "raw_reads": 72283880,
-      "trimmed_reads": 68109072,
-      "decontaminated_reads": 67524670,
-      "decon_raw_percent": 93.4,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S313R038_V06",
-      "raw_reads": 100416364,
-      "trimmed_reads": 78197376,
-      "decontaminated_reads": 77469708,
-      "decon_raw_percent": 77.1,
-      "decon_trimmed_percent": 99.1
-    },
-    {
-      "sample": "S401R031_V01",
-      "raw_reads": 206087584,
-      "trimmed_reads": 192535966,
-      "decontaminated_reads": 191455270,
-      "decon_raw_percent": 92.9,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S401R031_V05",
-      "raw_reads": 74709688,
-      "trimmed_reads": 69566913,
-      "decontaminated_reads": 69201820,
-      "decon_raw_percent": 92.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S401R031_V06",
-      "raw_reads": 87131264,
-      "trimmed_reads": 77182462,
-      "decontaminated_reads": 76708600,
-      "decon_raw_percent": 88.0,
-      "decon_trimmed_percent": 99.4
-    },
-    {
-      "sample": "S402R032_V01",
-      "raw_reads": 183545620,
-      "trimmed_reads": 141197460,
-      "decontaminated_reads": 140512220,
-      "decon_raw_percent": 76.6,
-      "decon_trimmed_percent": 99.5
-    },
-    {
-      "sample": "S402R032_V04",
-      "raw_reads": 73534200,
-      "trimmed_reads": 69313260,
-      "decontaminated_reads": 68879709,
-      "decon_raw_percent": 93.7,
-      "decon_trimmed_percent": 99.4
-    }
-  ]
-});
-                </script>
-                
+    <!--
+    === 總體基因體分析報告模板更新紀錄 ===
+    
+    改進項目：
+    1. 內容標準化：統一使用"總體基因體"術語（zh-TW標準），提升科學準確性
+    2. 無障礙改進：添加 ARIA 標籤、角色標識、鍵盤導航支援
+    3. 使用者體驗：
+       - 新增分析進度指示器
+       - 改進圖片模態框，支援下載功能
+       - 增強錯誤處理和載入狀態
+    4. 內容豐富化：
+       - 統計方法詳細說明和 FDR 校正資訊
+       - RPK 標準化方法解釋
+       - 改進參考文獻格式，包含 DOI 連結
+    5. 導航優化：
+       - 重組統計分析標籤，按使用頻率排序
+       - 添加圖示和狀態指示器
+    6. 頁腳資訊：包含完整的分析工具版本和聯絡資訊
+    
+    技術改進：
+    - 語義化 HTML 結構
+    - 改進的 role 和 aria 屬性
+    - 更好的響應式設計支援
+    - 增強的鍵盤訪問性
+    
+    更新日期：2025-06-23
+    版本：v1.0 Enhanced
+    -->
 </body>
 </html>
